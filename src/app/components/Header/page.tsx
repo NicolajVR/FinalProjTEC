@@ -1,6 +1,4 @@
 "use client";
-
-
 import {signOut,signIn, useSession} from "next-auth/react";
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
@@ -51,7 +49,7 @@ const Header = () => {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },

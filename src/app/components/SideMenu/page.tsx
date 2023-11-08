@@ -11,6 +11,7 @@ import { Settings } from "@mui/icons-material";
 import NextLink from "next/link";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import scss from "./SideMenu.module.scss";
+import TaskIcon from '@mui/icons-material/Task';
 
 import {
   Divider,
@@ -49,10 +50,11 @@ const closedMixin = (theme: Theme): CSSObject => ({
   },
 });
 
-const menuRouteList = ["Calendar","data", "profile", "settings", ""];
-const menuListTranslations = ["","Data", "Profile", "Settings", "Sign Out"];
+const menuRouteList = ["calendar","opgave","data", "profile", "settings", ""];
+const menuListTranslations = ["calendar","opgave","Data", "Profile", "Settings", "Sign Out"];
 const menuListIcons = [
 <CalendarMonthIcon/>,
+<TaskIcon/>,
   <EqualizerIcon />,
   <Person2Icon />,
   <Settings />,

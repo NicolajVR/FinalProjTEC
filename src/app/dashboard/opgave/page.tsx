@@ -7,6 +7,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import scss from "./opgave.module.scss";
 import {
   GridRowsProp,
   GridRowModesModel,
@@ -30,10 +33,15 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
 
+
+
 const roles = ['Market', 'Finance', 'Development'];
 const randomRole = () => {
   return randomArrayItem(roles);
 };
+
+const options = ['A2', 'A1'];
+const options2 = ['Dansk', 'Matematik'];
 
 const initialRows: GridRowsProp = [
   {
@@ -102,10 +110,17 @@ function EditToolbar(props: EditToolbarProps) {
 }
 
 export default function FullFeaturedCrudGrid() {
+
+    const [value, setValue] = React.useState<string | null>(options[0]);
+    const [value2, setValue2] = React.useState<string | null>(options2[0]);
+  const [inputValue, setInputValue] = React.useState('');
+  const [inputValue2, setInputValue2] = React.useState('');
+    
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 
-  const {data: session, status} = useSession();
+
+    const {data: session, status} = useSession();
     
       // Use state to manage when to render the component
     const [isReady, setIsReady] = useState(false);
@@ -238,7 +253,45 @@ export default function FullFeaturedCrudGrid() {
   ];
 
   return (
-    <><h1>Bruger</h1><Box
+    <><h1>Opgave</h1>
+
+<div>
+      <div>{`value: ${value !== null ? `'${value}'` : 'null'}`}</div>
+      <div>{`inputValue: '${inputValue}'`}</div>
+      <br />
+      <div className={scss.inputsheader}>
+      <Autocomplete
+        value={value}
+        onChange={(event: any, newValue: string | null) => {
+          setValue(newValue);
+        }}
+        inputValue={inputValue}
+        onInputChange={(event, newInputValue) => {
+          setInputValue(newInputValue);
+        }}
+        id="controllable-states-demo"
+        options={options}
+        sx={{ width: 300 }}
+        renderInput={(params) => <TextField {...params} label="Klasse" />}
+      />
+      <Autocomplete
+        value={value2}
+        onChange={(event: any, newValue2: string | null) => {
+          setValue2(newValue2);
+        }}
+        inputValue={inputValue2}
+        onInputChange={(event, newInputValue2) => {
+          setInputValue2(newInputValue2);
+        }}
+        id="controllable-states-demo"
+        options={options2}
+        sx={{ width: 300 }}
+        renderInput={(params) => <TextField {...params} label="Fag" />}
+      />
+      </div>
+    </div>
+
+    <Box
           sx={{
               height: 500,
               width: '100%',
@@ -264,6 +317,39 @@ export default function FullFeaturedCrudGrid() {
               slotProps={{
                   toolbar: { setRows, setRowModesModel },
               }} />
-      </Box></>
+      </Box>
+
+      <h1>Aflevering</h1>
+
+      <Box
+          sx={{
+              height: 500,
+              width: '100%',
+              '& .actions': {
+                  color: 'text.secondary',
+              },
+              '& .textPrimary': {
+                  color: 'text.primary',
+              },
+          }}
+      >
+          <DataGrid
+              rows={rows}
+              columns={columns}
+              editMode="row"
+              rowModesModel={rowModesModel}
+              onRowModesModelChange={handleRowModesModelChange}
+              onRowEditStop={handleRowEditStop}
+              processRowUpdate={processRowUpdate}
+              slots={{
+                  toolbar: EditToolbar,
+              }}
+              slotProps={{
+                  toolbar: { setRows, setRowModesModel },
+              }} />
+      </Box>
+      
+      </>
+      
   );
 }

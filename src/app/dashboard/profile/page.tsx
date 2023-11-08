@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Paper from "@mui/material/Paper";
 import {
@@ -15,11 +15,7 @@ import {
 import { redirect } from "next/navigation";
 
 const Profile = () => {
-  const { data: session } = useSession();
-  if(!session){
-    redirect("/auth/signin");
-}
-
+  const { data: session, status } = useSession();
 
   const names = session?.user?.name ? session.user.name.split(" "): [];
   const firstName = names[0];
@@ -37,6 +33,21 @@ const Profile = () => {
     confirmPassword: "",
     receiveEmails: false,
   });
+    // Use state to manage when to render the component
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      setIsReady(true);
+    } else if (status === "unauthenticated") {
+      redirect("/auth/signin");
+    }
+  }, [status]);
+
+  // Only render the profile page if isReady is true
+  if (!isReady) {
+    return null;
+  }
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = event.target;
