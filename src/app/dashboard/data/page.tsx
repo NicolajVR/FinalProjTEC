@@ -1,5 +1,6 @@
 "use client";
 import * as React from 'react';
+import getUsers from '@/app/lib/getUsers';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -34,6 +35,7 @@ const roles = ['Market', 'Finance', 'Development'];
 const randomRole = () => {
   return randomArrayItem(roles);
 };
+
 
 const initialRows: GridRowsProp = [
   {
@@ -101,7 +103,12 @@ function EditToolbar(props: EditToolbarProps) {
   );
 }
 
-export default function FullFeaturedCrudGrid() {
+export default async function FullFeaturedCrudGrid() {
+    const users = await getUsers();
+
+    console.log(users);
+
+
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 
