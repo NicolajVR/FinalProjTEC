@@ -1,7 +1,6 @@
 "use client";
 import * as React from "react";
-import createUser from "@/app/lib/createUser";
-import getUsers from "@/app/lib/getUsers";
+import getUsers from "@/app/lib/getProfiles";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
@@ -32,11 +31,11 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import { Link } from "@mui/material";
-
-const roles = ["Market", "Finance", "Development"];
-const randomRole = () => {
-  return randomArrayItem(roles);
-};
+import updateUser from "@/app/lib/updateProfile";
+import softdeleteUser from "@/app/lib/softdeleteProfile";
+import createProfile from "@/app/lib/createProfile";
+import getProfiles from "@/app/lib/getProfiles";
+import updateProfile from "@/app/lib/updateProfile";
 
 const initialRows: GridRowsProp = [
   {
@@ -48,7 +47,7 @@ const initialRows: GridRowsProp = [
     address: randomCreatedDate(),
     is_deleted: false,
     gender_id: 1,
-    city_id: 2,
+    user_id: 2,
   },
 ];
 
@@ -57,27 +56,6 @@ interface EditToolbarProps {
   setRowModesModel: (
     newModel: (oldModel: GridRowModesModel) => GridRowModesModel
   ) => void;
-}
-
-function EditToolbar(props: EditToolbarProps) {
-  const { setRows, setRowModesModel } = props;
-
-  const handleClick = () => {
-    const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, name: "", age: "", isNew: true }]);
-    setRowModesModel((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
-    }));
-  };
-
-  return (
-    <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add record
-      </Button>
-    </GridToolbarContainer>
-  );
 }
 
 export default function FullFeaturedCrudGrid() {
@@ -91,8 +69,13 @@ export default function FullFeaturedCrudGrid() {
   // Use state to manage when to render the component
   const [isReady, setIsReady] = useState(false);
 
+  /* 
+
+  CREATE FUNCTION
+
   useEffect(() => {
     rows.forEach((row) => {
+      
       if ( row.isNew && row.name && row.last_name) {
 
         const userData = {
@@ -103,20 +86,25 @@ export default function FullFeaturedCrudGrid() {
           address: row.address,
           is_deleted: row.is_deleted,
           gender_id: row.gender_id,
-          city_id: row.city_id,
         };
 
-        createUser(userData);
+        createProfile(userData);
+        row.isNew = false;
+
         console.log(userData);
       }
+
     });
+
   }, [rows]);
+
+  */
 
   useEffect(() => {
     const fetchData = async () => {
       if (status === "authenticated") {
         setIsReady(true);
-        const users = await getUsers();
+        const users = await getProfiles();
         console.log(users);
         users.forEach(
           (user: {
@@ -128,7 +116,7 @@ export default function FullFeaturedCrudGrid() {
             address: any;
             is_deleted: any;
             gender_id: any;
-            city_id: any;
+            user_id: any;
           }) => {
             setRows(users.map((user: any) => ({
                 id: user.user_information_id,
@@ -139,7 +127,7 @@ export default function FullFeaturedCrudGrid() {
                 address: user.address,
                 is_deleted: user.is_deleted,
                 gender_id: user.gender_id,
-                city_id: user.city_id,
+                user_id: user.user_id,
               })));
           }
         );
@@ -172,14 +160,26 @@ export default function FullFeaturedCrudGrid() {
 
   const handleSaveClick = (id: GridRowId) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-    const updatedRow = rows.find((row) => row.id === id);
-
-    console.log("Name:", updatedRow?.name);
-    console.log("Last Name:", updatedRow?.last_name);
   };
 
   const handleDeleteClick = (id: GridRowId) => () => {
-    setRows(rows.filter((row) => row.id !== id));
+    const rowToDelete = rows.find((row) => row.id === id);
+    // Find the index of the row to be deleted
+  const rowIndex = rows.findIndex((row) => row.id === id);
+  const updatedRows = [...rows];
+
+  // Update the is_deleted property of the row to be soft-deleted
+  updatedRows[rowIndex] = { ...updatedRows[rowIndex], is_deleted: true };
+
+
+    setRows(updatedRows);
+
+    var rowId: number = +id;
+    console.log(rowId);
+    console.log(rowToDelete?.is_deleted);
+
+    softdeleteUser(rowId);
+
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -203,6 +203,23 @@ export default function FullFeaturedCrudGrid() {
     updatedRows[rowIndex] = updatedRow;
 
     // Update the state with the new rows
+    const userData = {
+      user_information_id: updatedRow.id,
+      name: updatedRow.name,
+      last_name: updatedRow.last_name,
+      phone: updatedRow.phone,
+      date_of_birth: updatedRow.date_of_birth,
+      address: updatedRow.address,
+      is_deleted: updatedRow.is_deleted,
+      gender_id: updatedRow.gender_id,
+      user_id: updatedRow.user_id,
+    };
+
+    updateProfile(userData,updatedRow.id);
+    console.log(userData);
+
+    //createUser(userData);
+
     setRows(updatedRows);
 
     // Return the updated row to update the internal state of the DataGrid
@@ -263,10 +280,10 @@ export default function FullFeaturedCrudGrid() {
       type: "number",
     },
     {
-      field: "city_id",
-      headerName: "City_id",
+      field: "user_id",
+      headerName: "User_id",
       width: 120,
-      editable: true,
+      editable: false,
       type: "number",
     },
     {
@@ -319,7 +336,7 @@ export default function FullFeaturedCrudGrid() {
 
   return (
     <>
-      <h1>Bruger</h1>
+      <h1>Bruger Oplysninger </h1>
 
       <Box
         sx={{
@@ -341,9 +358,6 @@ export default function FullFeaturedCrudGrid() {
           onRowModesModelChange={handleRowModesModelChange}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={handleProcessRowUpdate}
-          slots={{
-            toolbar: EditToolbar,
-          }}
           slotProps={{
             toolbar: { setRows, setRowModesModel },
           }}

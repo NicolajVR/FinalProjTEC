@@ -1,6 +1,6 @@
-export default async function createUser(user: any) {
+export default async function createProfile(user: any) {
     try {
-    const response = await fetch("https://localhost:7136/api/Bruger", {
+    const response = await fetch("https://localhost:7136/api/User_information", {
       method: 'POST',
       body: JSON.stringify(user),
       headers: {
