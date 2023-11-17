@@ -102,42 +102,46 @@ export default function FullFeaturedCrudGrid() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (status === "authenticated") {
-        setIsReady(true);
-        const users = await getProfiles();
-        console.log(users);
-        users.forEach(
-          (user: {
-            user_information_id: any;
-            name: any;
-            last_name: any;
-            phone: any;
-            date_of_birth: any;
-            address: any;
-            is_deleted: any;
-            gender_id: any;
-            user_id: any;
-          }) => {
-            setRows(users.map((user: any) => ({
-                id: user.user_information_id,
-                name: user.name,
-                last_name: user.last_name,
-                phone: user.phone,
-                date_of_birth: user.date_of_birth,
-                address: user.address,
-                is_deleted: user.is_deleted,
-                gender_id: user.gender_id,
-                user_id: user.user_id,
-              })));
-          }
-        );
-      } else if (status === "unauthenticated") {
-        redirect("/auth/signin");
-      }
+      setIsReady(true);
+      const users = await getProfiles();
+      console.log(users);
+      users.forEach(
+        (user: {
+          user_information_id: any;
+          name: any;
+          last_name: any;
+          phone: any;
+          date_of_birth: any;
+          address: any;
+          is_deleted: any;
+          gender_id: any;
+          user_id: any;
+        }) => {
+          setRows(
+            users.map((user: any) => ({
+              id: user.user_information_id,
+              name: user.name,
+              last_name: user.last_name,
+              phone: user.phone,
+              date_of_birth: user.date_of_birth,
+              address: user.address,
+              is_deleted: user.is_deleted,
+              gender_id: user.gender_id,
+              user_id: user.user_id,
+            }))
+          );
+        }
+      );
     };
 
+    if (status === "authenticated") {
+      setIsReady(true);
+      fetchData();
+    } else if (status === "unauthenticated") {
+      redirect("/auth/signin");
+    }
+
     console.log(rows[0]);
-    fetchData();
   }, [status]);
 
   // Only render the profile page if isReady is true
@@ -165,12 +169,11 @@ export default function FullFeaturedCrudGrid() {
   const handleDeleteClick = (id: GridRowId) => () => {
     const rowToDelete = rows.find((row) => row.id === id);
     // Find the index of the row to be deleted
-  const rowIndex = rows.findIndex((row) => row.id === id);
-  const updatedRows = [...rows];
+    const rowIndex = rows.findIndex((row) => row.id === id);
+    const updatedRows = [...rows];
 
-  // Update the is_deleted property of the row to be soft-deleted
-  updatedRows[rowIndex] = { ...updatedRows[rowIndex], is_deleted: true };
-
+    // Update the is_deleted property of the row to be soft-deleted
+    updatedRows[rowIndex] = { ...updatedRows[rowIndex], is_deleted: true };
 
     setRows(updatedRows);
 
@@ -179,7 +182,6 @@ export default function FullFeaturedCrudGrid() {
     console.log(rowToDelete?.is_deleted);
 
     softdeleteUser(rowId);
-
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -204,16 +206,14 @@ export default function FullFeaturedCrudGrid() {
 
     let result = 1;
 
-
-
     switch (updatedRow.gender_id) {
       case "none":
-        result =  1;
+        result = 1;
         break;
-      case 'Male':
+      case "Male":
         result = 2;
         break;
-      case 'Female':
+      case "Female":
         result = 3;
         break;
       default:
@@ -221,7 +221,7 @@ export default function FullFeaturedCrudGrid() {
         break;
     }
 
-    console.log("check result: ",result);
+    console.log("check result: ", result);
 
     // Update the state with the new rows
     const userData = {
@@ -236,8 +236,8 @@ export default function FullFeaturedCrudGrid() {
       user_id: updatedRow.user_id,
     };
 
-    updateProfile(userData,updatedRow.id);
-    console.log("here",userData);
+    updateProfile(userData, updatedRow.id);
+    console.log("here", userData);
 
     //createUser(userData);
 
@@ -290,7 +290,7 @@ export default function FullFeaturedCrudGrid() {
         if (params.value == null) {
           return false;
         }
-        return params.value
+        return params.value;
       },
     },
     {
@@ -298,17 +298,17 @@ export default function FullFeaturedCrudGrid() {
       headerName: "Gender",
       width: 80,
       editable: true,
-      type: 'singleSelect',
-      valueOptions: ['none', 'Male', 'Female'],
+      type: "singleSelect",
+      valueOptions: ["none", "Male", "Female"],
       valueGetter: (params) => {
         if (params.value == 1) {
-          return 'none';
+          return "none";
         }
         if (params.value == 2) {
-          return 'Male';
+          return "Male";
         }
         if (params.value == 3) {
-          return 'Female';
+          return "Female";
         }
         return params.value;
       },

@@ -27,6 +27,7 @@ const Dashboard = () => {
   const [EVENTS, setEVENTS] = useState([]);
 
   useEffect(() => {
+
     const fetchData = async () => {
       if (status === "authenticated") {
         setIsReady(true);
@@ -41,13 +42,17 @@ const Dashboard = () => {
 
         console.log("test: ", events);
         setEVENTS(events);
-      } else if (status === "unauthenticated") {
-        redirect("/auth/signin");
+
       }
     };
 
+    if (status === "authenticated") {
+      setIsReady(true);
+      fetchData();
+    } else if (status === "unauthenticated") {
+      redirect("/auth/signin");
+    }
     //console.log(rows[0]);
-    fetchData();
   }, [status]);
 
   // Only render the profile page if isReady is true

@@ -21,7 +21,7 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Header = () => {
     const{data: session} = useSession();
-    const userProfileImg = session?.user?.image as string;
+    const userProfileImg = session?.user?.surname as string;
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -133,7 +133,7 @@ const Header = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open profile">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={session?.user?.name as string} src={userProfileImg} />
+                <Avatar alt={session?.user?.surname as string} src={userProfileImg} />
               </IconButton>
             </Tooltip>
             <Menu

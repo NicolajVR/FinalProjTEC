@@ -3,12 +3,15 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Paper from "@mui/material/Paper";
 import {
+  Alert,
+  AlertProps,
   Avatar,
   Box,
   Button,
   Checkbox,
   FormControlLabel,
   Grid,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -16,12 +19,15 @@ import { redirect } from "next/navigation";
 import { getUserById, updateUser } from "@/app/lib/user";
 import { getProfileById } from "@/app/lib/profile";
 import updateProfile from "@/app/lib/updateProfile";
+import MuiAlert  from '@mui/material/Alert';
 
 const Profile =  () => {
   //const names = session?.user?.name ? session.user.name.split(" "): [];
   //const firstName = names[0];
   //const lastName = names.length > 1 ? names[names.length - 1] : "";
   const { data: session, status } = useSession();
+  const [openError, setOpenError] = React.useState(false);
+  const [openSuccess, setOpenSuccess] = React.useState(false);
   // Use state to manage when to render the component
   const [isReady, setIsReady] = useState(false);
 
@@ -29,7 +35,6 @@ const Profile =  () => {
     firstName: "",
     lastName: "",
     email: "",
-    password: "",
     phone: "",
     date_of_birth: "",
     address: "",
@@ -38,39 +43,50 @@ const Profile =  () => {
   });
 
   useEffect(() => {
+
     const fetchData = async () => {
-      if (status === "authenticated") {
-        try {
-          setIsReady(true);
-          const user = await getUserById(1);
-          const profile = await getProfileById(1);
 
-          setFormData({
-            firstName: profile.name,
-            lastName: profile.last_name,
-            email: user.email,
-            password: user.password_hash,
-            phone: profile.phone,
-            date_of_birth: profile.date_of_birth,
-            address: profile.address,
-            gender: profile.gender_id,
-            confirmPassword: "",
-          });
-        } catch (error) {
-          // Handle error fetching data
-        }
-      } else if (status === "unauthenticated") {
-        redirect("/auth/signin");
+      try {
+        const user = await getUserById(session?.user.user_id as number);
+        const profile = await getProfileById(session?.user.user_id as number);
+
+        setFormData({
+          firstName: profile.name,
+          lastName: profile.last_name,
+          email: user.email,
+          phone: profile.phone,
+          date_of_birth: profile.date_of_birth,
+          address: profile.address,
+          gender: profile.gender_id,
+          confirmPassword: "",
+        });
+      } catch (error) {
+        // Handle error fetching data
       }
-    };
+  };
 
-    fetchData();
+    if (status === "authenticated") {
+      setIsReady(true);
+      fetchData();
+    } else if (status === "unauthenticated") {
+      redirect("/auth/signin");
+    }
+  
   }, [status]);
 
   // Only render the profile page if isReady is true
   if (!isReady) {
     return null;
   }
+
+  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref,
+  ) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = event.target;
@@ -80,17 +96,37 @@ const Profile =  () => {
     }));
   };
 
+  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenError(false);
+
+  };
+
+  const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSuccess(false);
+
+  };
+
+  
+
+
+
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const user = await getUserById(1);
-    const profile = await getProfileById(1);
+    const user = await getUserById(session?.user.user_id as number);
+    const profile = await getProfileById(session?.user.user_id as number);
 
     const userData = {
       user_id: user.user_id,
       surname: user.surname,
       email: formData.email,
-      password_hash: formData.password,
+      password_hash: user.password_hash,
       is_deleted: user.is_deleted,
     };
 
@@ -108,16 +144,20 @@ const Profile =  () => {
       user_id: profile.user_id,
     };
 
-    updateUser(userData,user.user_id);
-    updateProfile(profileData,profile.user_information_id);
+    if(formData.confirmPassword == userData.password_hash)
+    {
+      updateUser(userData,user.user_id);
+      updateProfile(profileData,profile.user_information_id);
+      setOpenSuccess(true);
+
+    } else{
+      setOpenError(true);
+    }
 
     console.log(formData); // Submit form data to server here
-
-
-
-
-
   };
+
+
   return (
     <>
       <Box>
@@ -199,24 +239,12 @@ const Profile =  () => {
                       onChange={handleFormChange}
                     />
                   </Grid>
-
                   <Grid item xs={12}>
                     <TextField
                       required
                       fullWidth
                       type="password"
-                      label="Password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleFormChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      type="password"
-                      label="Confirm Password"
+                      label="Confirm changes with your password"
                       name="confirmPassword"
                       value={formData.confirmPassword}
                       onChange={handleFormChange}
@@ -233,6 +261,16 @@ const Profile =  () => {
           </Grid>
         </Paper>
       </Box>
+      <Snackbar open={openError} autoHideDuration={6000} onClose={handleCloseError}>
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          Password dosen't match 
+        </Alert>
+      </Snackbar>
+      <Snackbar open={openSuccess} autoHideDuration={6000} onClose={handleCloseSuccess}>
+        <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+          Profile updated
+        </Alert>
+      </Snackbar>
     </>
   );
 };

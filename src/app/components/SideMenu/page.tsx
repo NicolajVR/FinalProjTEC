@@ -1,3 +1,4 @@
+"use client"
 import { CSSObject } from "@mui/system";
 import * as React from "react";
 import IconButton from "@mui/material/IconButton";
@@ -25,7 +26,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const drawerWidth = 240;
 
@@ -50,18 +51,36 @@ const closedMixin = (theme: Theme): CSSObject => ({
   },
 });
 
-const menuRouteList = ["calendar","opgave","data", "profile", "settings", ""];
-const menuListTranslations = ["calendar","opgave","Data", "Profile", "Settings", "Sign Out"];
-const menuListIcons = [
+
+const SideMenu = () => {
+
+  let menuRouteList = ["calendar", "profile", ""];
+let menuListTranslations = ["calendar", "Profile", "Sign Out"];
+let menuListIcons = [
+<CalendarMonthIcon/>,
+  <Person2Icon />,
+  <ExitToAppIcon />,
+];
+
+const { data: session} = useSession();
+
+if (session?.user.role_id == 1)
+{
+  menuRouteList = ["calendar","opgave","data", "profile", "settings", ""];
+
+  menuListTranslations = ["calendar","opgave","Data", "Profile", "Settings", "Sign Out"];
+  
+  menuListIcons = [
 <CalendarMonthIcon/>,
 <TaskIcon/>,
   <EqualizerIcon />,
   <Person2Icon />,
   <Settings />,
   <ExitToAppIcon />,
-];
 
-const SideMenu = () => {
+  ];
+} 
+
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const mobileCheck = useMediaQuery("(min-width: 600px)");

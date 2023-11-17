@@ -147,40 +147,42 @@ export default function FullFeaturedCrudGrid() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (status === "authenticated") {
-        setIsReady(true);
-        //console.log("TOKEN: ",session?.user.token);
+      //console.log("TOKEN: ",session?.user.token);
 
-        const users = await getUsers(session?.user.token);
-        //console.log("token: ", session?.user.token);
-        users.forEach(
-          (user: {
-            user_id: any;
-            surname: any;
-            email: any;
-            password_hash: any;
-            is_deleted: any;
-            role: any;
-          }) => {
-            setRows(
-              users.map((user: any) => ({
-                id: user.user_id,
-                surname: user.surname,
-                email: user.email,
-                password_hash: user.password_hash,
-                is_deleted: user.is_deleted,
-                role: user.role_id
-              }))
-            );
-          }
-        );
-      } else if (status === "unauthenticated") {
-        redirect("/auth/signin");
-      }
-    };
+      const users = await getUsers(session?.user.token);
+      //console.log("token: ", session?.user.token);
+      users.forEach(
+        (user: {
+          user_id: any;
+          surname: any;
+          email: any;
+          password_hash: any;
+          is_deleted: any;
+          role: any;
+        }) => {
+          setRows(
+            users.map((user: any) => ({
+              id: user.user_id,
+              surname: user.surname,
+              email: user.email,
+              password_hash: user.password_hash,
+              is_deleted: user.is_deleted,
+              role: user.role_id
+            }))
+          );
+        }
+      );
+    
+  };
 
-    console.log(rows[0]);
+    if (status === "authenticated") {
+      setIsReady(true);
+      console.log(rows[0]);
     fetchData();
+    } else if (status === "unauthenticated") {
+      redirect("/auth/signin");
+    }
+
   }, [status]);
 
   // Only render the profile page if isReady is true
