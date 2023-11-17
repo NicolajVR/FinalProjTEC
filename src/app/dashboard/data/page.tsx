@@ -202,6 +202,27 @@ export default function FullFeaturedCrudGrid() {
     const updatedRows = [...rows];
     updatedRows[rowIndex] = updatedRow;
 
+    let result = 1;
+
+
+
+    switch (updatedRow.gender_id) {
+      case "none":
+        result =  1;
+        break;
+      case 'Male':
+        result = 2;
+        break;
+      case 'Female':
+        result = 3;
+        break;
+      default:
+        result = 3;
+        break;
+    }
+
+    console.log("check result: ",result);
+
     // Update the state with the new rows
     const userData = {
       user_information_id: updatedRow.id,
@@ -211,12 +232,12 @@ export default function FullFeaturedCrudGrid() {
       date_of_birth: updatedRow.date_of_birth,
       address: updatedRow.address,
       is_deleted: updatedRow.is_deleted,
-      gender_id: updatedRow.gender_id,
+      gender_id: result,
       user_id: updatedRow.user_id,
     };
 
     updateProfile(userData,updatedRow.id);
-    console.log(userData);
+    console.log("here",userData);
 
     //createUser(userData);
 
@@ -231,7 +252,7 @@ export default function FullFeaturedCrudGrid() {
   };
 
   const columns: GridColDef[] = [
-    { field: "name", headerName: "Name", width: 180, editable: true },
+    { field: "name", headerName: "Name", width: 120, editable: true },
     {
       field: "last_name",
       headerName: "Last_name",
@@ -262,7 +283,7 @@ export default function FullFeaturedCrudGrid() {
     {
       field: "is_deleted",
       headerName: "Is_deleted",
-      width: 120,
+      width: 90,
       editable: true,
       type: "boolean",
       valueGetter: (params) => {
@@ -274,10 +295,23 @@ export default function FullFeaturedCrudGrid() {
     },
     {
       field: "gender_id",
-      headerName: "Gender_id",
-      width: 120,
+      headerName: "Gender",
+      width: 80,
       editable: true,
-      type: "number",
+      type: 'singleSelect',
+      valueOptions: ['none', 'Male', 'Female'],
+      valueGetter: (params) => {
+        if (params.value == 1) {
+          return 'none';
+        }
+        if (params.value == 2) {
+          return 'Male';
+        }
+        if (params.value == 3) {
+          return 'Female';
+        }
+        return params.value;
+      },
     },
     {
       field: "user_id",

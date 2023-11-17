@@ -5,6 +5,7 @@ import { CssBaseline } from '@mui/material'
 import Header from './components/Header/page'
 import Layout from './components/Layout/page'
 import { Component } from 'react'
+import scss from './layout.module.scss'
 
 
 export const metadata: Metadata = {
@@ -18,8 +19,8 @@ export default  function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className={scss.html}>
+      <body className={scss.body}>
         
         <Providers>
         <CssBaseline>

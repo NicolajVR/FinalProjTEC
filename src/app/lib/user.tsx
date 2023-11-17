@@ -1,11 +1,20 @@
-export async function getUsers() {
-    const response = await fetch("https://localhost:7136/api/User");
-  
-    if (!response.ok) {
-      throw new Error("failed to fetch users");
+
+  export async function getUsers(token: any) {
+    try {
+      const response = await fetch("https://localhost:7136/api/User", {
+        method: "GET",
+        headers: {
+            Authorization: 'Bearer ' + token,
+        },
+      });
+      console.log(response);
+      if (!response.ok) {
+        throw new Error("Failed to create user");
+      }
+      return await response.json();
+    } catch (error) {
+      console.log(error);
     }
-  
-    return await response.json();
   }
   
   export async function createUser(user: any) {
@@ -75,3 +84,21 @@ export async function getUsers() {
       }
     }
   
+    export async function login(user: any) {
+        try {
+          const response = await fetch("https://localhost:7136/api/User", {
+            method: "POST",
+            body: JSON.stringify(user),
+            headers: {
+              "content-type": "application/json",
+            },
+          });
+          console.log(response);
+          if (!response.ok) {
+            throw new Error("Failed to create user");
+          }
+          return await response.json();
+        } catch (error) {
+          console.log(error);
+        }
+      }

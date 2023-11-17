@@ -1,0 +1,29 @@
+.CenteredContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+
+
+}
+
+//styledpaper for loginform
+.StyledPaper{
+  width: 100%;
+  max-width: 500px;
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+// individuel text field 
+.StyledTextField{
+    margin-bottom: 8px;
+
+}
+
+
+// button
+.StyledButton {
+    margin-top: 8px;
+
+}

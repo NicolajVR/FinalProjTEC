@@ -13,35 +13,58 @@ import {
   Typography,
 } from "@mui/material";
 import { redirect } from "next/navigation";
+import { getUserById, updateUser } from "@/app/lib/user";
+import { getProfileById } from "@/app/lib/profile";
+import updateProfile from "@/app/lib/updateProfile";
 
-const Profile = () => {
+const Profile =  () => {
+  //const names = session?.user?.name ? session.user.name.split(" "): [];
+  //const firstName = names[0];
+  //const lastName = names.length > 1 ? names[names.length - 1] : "";
   const { data: session, status } = useSession();
+  // Use state to manage when to render the component
+  const [isReady, setIsReady] = useState(false);
 
-  const names = session?.user?.name ? session.user.name.split(" "): [];
-  const firstName = names[0];
-  const lastName = names.length > 1 ? names[names.length - 1] : "";
   const [formData, setFormData] = useState({
-    firstName: firstName,
-    lastName: lastName,
-    email: session?.user?.email,
+    firstName: "",
+    lastName: "",
+    email: "",
     password: "",
     phone: "",
     date_of_birth: "",
     address: "",
-    gender:"",
-    city:"",
+    gender: 1,
     confirmPassword: "",
-    receiveEmails: false,
   });
-    // Use state to manage when to render the component
-  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    if (status === "authenticated") {
-      setIsReady(true);
-    } else if (status === "unauthenticated") {
-      redirect("/auth/signin");
-    }
+    const fetchData = async () => {
+      if (status === "authenticated") {
+        try {
+          setIsReady(true);
+          const user = await getUserById(1);
+          const profile = await getProfileById(1);
+
+          setFormData({
+            firstName: profile.name,
+            lastName: profile.last_name,
+            email: user.email,
+            password: user.password_hash,
+            phone: profile.phone,
+            date_of_birth: profile.date_of_birth,
+            address: profile.address,
+            gender: profile.gender_id,
+            confirmPassword: "",
+          });
+        } catch (error) {
+          // Handle error fetching data
+        }
+      } else if (status === "unauthenticated") {
+        redirect("/auth/signin");
+      }
+    };
+
+    fetchData();
   }, [status]);
 
   // Only render the profile page if isReady is true
@@ -57,29 +80,55 @@ const Profile = () => {
     }));
   };
 
-  const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const user = await getUserById(1);
+    const profile = await getProfileById(1);
+
+    const userData = {
+      user_id: user.user_id,
+      surname: user.surname,
+      email: formData.email,
+      password_hash: formData.password,
+      is_deleted: user.is_deleted,
+    };
+
+    
+
+    const profileData = {
+      user_information_id: profile.user_information_id,
+      name: formData.firstName,
+      last_name: formData.lastName,
+      phone: formData.phone,
+      date_of_birth: formData.date_of_birth,
+      address: formData.address,
+      is_deleted: profile.is_deleted,
+      gender_id: profile.gender_id,
+      user_id: profile.user_id,
+    };
+
+    updateUser(userData,user.user_id);
+    updateProfile(profileData,profile.user_information_id);
+
     console.log(formData); // Submit form data to server here
+
+
+
+
+
   };
   return (
     <>
       <Box>
         <Typography variant={"h4"} sx={{ paddingBottom: 4 }}>
-          Hey {session ? session?.user?.name : "User"}, welcome to your profile
+          Hey {session ? session?.user?.surname : "User"}, welcome to your profile
           👋
         </Typography>
         <Paper sx={{ padding: "1rem 2rem" }}>
           <Grid container justifyContent="center">
             <Grid item xs={12} sm={8} md={6}>
               <Box display="flex" flexDirection="column" alignItems="center">
-                <Avatar
-                  sx={{
-                    height: 100,
-                    width: 100,
-                    marginBottom: 2,
-                  }}
-                  src={session?.user?.image as string}
-                />
               </Box>
               <form
                 onSubmit={handleSubmit}
@@ -150,18 +199,7 @@ const Profile = () => {
                       onChange={handleFormChange}
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      type="city"
-                      label="city"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleFormChange}
-                    />
-                  </Grid>
-                  
+
                   <Grid item xs={12}>
                     <TextField
                       required
@@ -182,19 +220,6 @@ const Profile = () => {
                       name="confirmPassword"
                       value={formData.confirmPassword}
                       onChange={handleFormChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          name="receiveEmails"
-                          checked={formData.receiveEmails}
-                          onChange={handleFormChange}
-                          color="primary"
-                        />
-                      }
-                      label="Receive sales analytics emails"
                     />
                   </Grid>
                   <Grid item xs={12}>

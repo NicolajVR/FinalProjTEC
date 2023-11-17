@@ -33,6 +33,7 @@ import { redirect } from "next/navigation";
 import { Link } from "@mui/material";
 import { create } from "domain";
 import createProfile from "@/app/lib/createProfile";
+import getUProfiles from "@/app/lib/getProfiles";
 
 const initialRows: GridRowsProp = [
   {
@@ -61,7 +62,7 @@ function EditToolbar(props: EditToolbarProps) {
 
   const handleClick = () => {
     const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, name: "", age: "", isNew: true }]);
+    setRows((oldRows) => [...oldRows, { id, surname: "", email: "", password_hash: "", is_deleted: false, role: 3,  isNew: true }]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
@@ -91,27 +92,46 @@ export default function FullFeaturedCrudGrid() {
   useEffect(() => {
     rows.forEach(async (row) => {
       if (row.isNew && row.surname && row.email) {
+
+        let result = 1;
+
+        switch (row.role) {
+          case 'Admin':
+            result =  1;
+            break;
+          case 'Teacher':
+            result = 2;
+            break;
+          case 'Student':
+            result = 3;
+            break;
+          default:
+            result = 3;
+            break;
+        }
+
         const userData = {
           surname: row.surname,
           email: row.email,
           password_hash: row.password_hash,
           is_deleted: row.is_deleted,
+          role_id: result
         };
 
 
         await createUser(userData);
-
-        const users = await getUsers();
+        
+        const users = await getUsers(session?.user.token);
         // Extract the last event_id
         const lastEventId = await users[users.length - 1].user_id;
 
       const profileData = {
         user_information_id: lastEventId,
         name: row.surname,
-        last_name: null,
-        phone: null,
-        date_of_birth: null,
-        address: null,
+        last_name: "",
+        phone: "",
+        date_of_birth: "",
+        address: "",
         is_deleted: row.is_deleted,
         gender_id: 1,
         user_id: lastEventId
@@ -129,8 +149,10 @@ export default function FullFeaturedCrudGrid() {
     const fetchData = async () => {
       if (status === "authenticated") {
         setIsReady(true);
-        const users = await getUsers();
-        console.log(users);
+        //console.log("TOKEN: ",session?.user.token);
+
+        const users = await getUsers(session?.user.token);
+        //console.log("token: ", session?.user.token);
         users.forEach(
           (user: {
             user_id: any;
@@ -138,6 +160,7 @@ export default function FullFeaturedCrudGrid() {
             email: any;
             password_hash: any;
             is_deleted: any;
+            role: any;
           }) => {
             setRows(
               users.map((user: any) => ({
@@ -145,7 +168,8 @@ export default function FullFeaturedCrudGrid() {
                 surname: user.surname,
                 email: user.email,
                 password_hash: user.password_hash,
-                is_deleted: user.is_deleted
+                is_deleted: user.is_deleted,
+                role: user.role_id
               }))
             );
           }
@@ -221,6 +245,23 @@ export default function FullFeaturedCrudGrid() {
     const updatedRows = [...rows];
     updatedRows[rowIndex] = updatedRow;
 
+    let result = 1;
+
+        switch (updatedRow.role) {
+          case "Admin":
+            result =  1;
+            break;
+          case 'Teacher':
+            result = 2;
+            break;
+          case 'Student':
+            result = 3;
+            break;
+          default:
+            result = 3;
+            break;
+        }
+
     // Update the state with the new rows
     const userData = {
       user_id: updatedRow.id,
@@ -228,6 +269,7 @@ export default function FullFeaturedCrudGrid() {
       email: updatedRow.email,
       password_hash: updatedRow.password_hash,
       is_deleted: updatedRow.is_deleted,
+      role_id: result
     };
 
     // if id exists in database 
@@ -275,6 +317,26 @@ export default function FullFeaturedCrudGrid() {
       valueGetter: (params) => {
         if (params.value == null) {
           return false;
+        }
+        return params.value;
+      },
+    },
+    {
+      field: "role",
+      headerName: "Role",
+      width: 120,
+      editable: true,
+      type: 'singleSelect',
+      valueOptions: ['Admin', 'Teacher', 'Student'],
+      valueGetter: (params) => {
+        if (params.value == 1) {
+          return 'Admin';
+        }
+        if (params.value == 2) {
+          return 'Teacher';
+        }
+        if (params.value == 3) {
+          return 'Student';
         }
         return params.value;
       },
