@@ -1,7 +1,5 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import https from 'https'; // Import https module      
-
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -48,8 +46,6 @@ export const authOptions: NextAuthOptions = {
       session.user = token as any;
       return session
     }
-
-
 
   }
 

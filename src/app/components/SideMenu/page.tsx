@@ -55,12 +55,13 @@ const closedMixin = (theme: Theme): CSSObject => ({
 const SideMenu = () => {
 
   let menuRouteList = ["calendar", "profile", ""];
-let menuListTranslations = ["calendar", "Profile", "Sign Out"];
-let menuListIcons = [
-<CalendarMonthIcon/>,
-  <Person2Icon />,
-  <ExitToAppIcon />,
-];
+  let menuListTranslations = ["calendar", "Profile", "Sign Out"];
+  let menuListIcons = [
+  <CalendarMonthIcon/>,
+    <Person2Icon />,
+    <ExitToAppIcon />,
+  ];
+
 
 const { data: session} = useSession();
 
@@ -76,6 +77,22 @@ if (session?.user.role_id == 1)
   <EqualizerIcon />,
   <Person2Icon />,
   <Settings />,
+  <ExitToAppIcon />,
+
+  ];
+} 
+
+
+if (session?.user.role_id == 2)
+{
+  menuRouteList = ["calendar","opgave","profile", ""];
+
+  menuListTranslations = ["calendar","opgave", "Profile", "Sign Out"];
+  
+  menuListIcons = [
+<CalendarMonthIcon/>,
+<TaskIcon/>,
+  <Person2Icon />,
   <ExitToAppIcon />,
 
   ];

@@ -17,13 +17,13 @@
     }
   }
   
-  export async function createUser(user: any) {
+  export async function createUser(user: any, token: any) {
     try {
       const response = await fetch("https://localhost:7136/api/User", {
         method: "POST",
         body: JSON.stringify(user),
         headers: {
-          "content-type": "application/json",
+            Authorization: 'Bearer ' + token,
         },
       });
       console.log(response);

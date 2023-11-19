@@ -119,7 +119,7 @@ export default function FullFeaturedCrudGrid() {
         };
 
 
-        await createUser(userData);
+        await createUser(userData, session?.user.token);
         
         const users = await getUsers(session?.user.token);
         // Extract the last event_id
@@ -423,6 +423,10 @@ export default function FullFeaturedCrudGrid() {
           }}
         />
       </Box>
+
+      <h1>Enrollments</h1>
+
+
     </>
   );
 }
