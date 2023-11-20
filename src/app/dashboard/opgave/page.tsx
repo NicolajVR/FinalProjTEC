@@ -115,7 +115,7 @@ export default function FullFeaturedCrudGrid() {
           );
           return foundClass?.enrollmentClassResponse.id;
         };
-        
+
         if (row.isNew && row.assignment_description) {
 
           const classes = await getClassesFromUser(
@@ -129,7 +129,6 @@ export default function FullFeaturedCrudGrid() {
           const subjectData = subjects.find( (item: any) => item.subjectname === value2);
           
           const userData = {
-            
               classeId: classData,
               subjectId: subjectData.id,
               assignment_Deadline: row.assignment_deadline,
@@ -222,8 +221,6 @@ export default function FullFeaturedCrudGrid() {
         (item: { enrollmentClassResponse: { className: any } }) =>
           item.enrollmentClassResponse.className
       );
-
-
 
       options2 = subjects.map((subject: any) => subject.subjectname);
 

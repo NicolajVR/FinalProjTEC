@@ -13,6 +13,7 @@ import NextLink from "next/link";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import scss from "./SideMenu.module.scss";
 import TaskIcon from '@mui/icons-material/Task';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 
 import {
   Divider,
@@ -85,13 +86,14 @@ if (session?.user.role_id == 1)
 
 if (session?.user.role_id == 2)
 {
-  menuRouteList = ["calendar","opgave","profile", ""];
+  menuRouteList = ["calendar","opgave","submited","profile", ""];
 
-  menuListTranslations = ["calendar","opgave", "Profile", "Sign Out"];
+  menuListTranslations = ["calendar","opgave", "Submited", "Profile", "Sign Out"];
   
   menuListIcons = [
 <CalendarMonthIcon/>,
 <TaskIcon/>,
+<PostAddIcon/>,
   <Person2Icon />,
   <ExitToAppIcon />,
 
