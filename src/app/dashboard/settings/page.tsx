@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import {getUsers,createUser,updateUser,deleteUser} from "@/app/lib/user";
+import { getUsers, createUser, updateUser, deleteUser } from "@/app/lib/user";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
@@ -30,10 +30,23 @@ import {
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
-import { Link } from "@mui/material";
+import {
+  Autocomplete,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Hidden,
+  Link,
+  TextField,
+} from "@mui/material";
 import { create } from "domain";
 import createProfile from "@/app/lib/createProfile";
 import getUProfiles from "@/app/lib/getProfiles";
+import { createEnrollment, deleteEnrollment, getClassesFromUser } from "@/app/lib/enrollment";
+import { getClass } from "@/app/lib/class";
 
 const initialRows: GridRowsProp = [
   {
@@ -50,6 +63,8 @@ const initialRows: GridRowsProp = [
   },
 ];
 
+let options: string[] = [];
+
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
   setRowModesModel: (
@@ -62,7 +77,18 @@ function EditToolbar(props: EditToolbarProps) {
 
   const handleClick = () => {
     const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, surname: "", email: "", password_hash: "", is_deleted: false, role: 3,  isNew: true }]);
+    setRows((oldRows) => [
+      ...oldRows,
+      {
+        id,
+        surname: "",
+        email: "",
+        password_hash: "",
+        is_deleted: false,
+        role: 3,
+        isNew: true,
+      },
+    ]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
@@ -72,7 +98,7 @@ function EditToolbar(props: EditToolbarProps) {
   return (
     <GridToolbarContainer>
       <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add record
+        Add user
       </Button>
     </GridToolbarContainer>
   );
@@ -80,6 +106,15 @@ function EditToolbar(props: EditToolbarProps) {
 
 export default function FullFeaturedCrudGrid() {
   const [rows, setRows] = React.useState(initialRows);
+  const [selected, setSelected] = React.useState("User not selected");
+  const [selectedID, setSelectedID] = React.useState([
+    { id: 1, surname: "User not selected" },
+  ]);
+  const [value, setValue] = React.useState<string | null>(null); // Set initial state to null
+  const [open, setOpen] = React.useState(false);
+  const [openRemove, setOpenRemove] = React.useState(false);
+  const [inputValue, setInputValue] = React.useState("");
+
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
   );
@@ -92,17 +127,16 @@ export default function FullFeaturedCrudGrid() {
   useEffect(() => {
     rows.forEach(async (row) => {
       if (row.isNew && row.surname && row.email) {
-
         let result = 1;
 
         switch (row.role) {
-          case 'Admin':
-            result =  1;
+          case "Admin":
+            result = 1;
             break;
-          case 'Teacher':
+          case "Teacher":
             result = 2;
             break;
-          case 'Student':
+          case "Student":
             result = 3;
             break;
           default:
@@ -115,29 +149,28 @@ export default function FullFeaturedCrudGrid() {
           email: row.email,
           password_hash: row.password_hash,
           is_deleted: row.is_deleted,
-          role_id: result
+          role_id: result,
         };
 
-
         await createUser(userData, session?.user.token);
-        
+
         const users = await getUsers(session?.user.token);
         // Extract the last event_id
         const lastEventId = await users[users.length - 1].user_id;
 
-      const profileData = {
-        user_information_id: lastEventId,
-        name: row.surname,
-        last_name: "",
-        phone: "",
-        date_of_birth: "",
-        address: "",
-        is_deleted: row.is_deleted,
-        gender_id: 1,
-        user_id: lastEventId
-      };
-      
-      console.log(profileData);
+        const profileData = {
+          user_information_id: lastEventId,
+          name: row.surname,
+          last_name: "",
+          phone: "",
+          date_of_birth: "",
+          address: "",
+          is_deleted: row.is_deleted,
+          gender_id: 1,
+          user_id: lastEventId,
+        };
+
+        console.log(profileData);
         await createProfile(profileData);
 
         row.isNew = false;
@@ -148,6 +181,12 @@ export default function FullFeaturedCrudGrid() {
   useEffect(() => {
     const fetchData = async () => {
       //console.log("TOKEN: ",session?.user.token);
+
+      const classes = await getClass();
+      options = classes.map((item: any) => item.className);
+
+      setValue(options[0]);
+      setInputValue(options[0]);
 
       const users = await getUsers(session?.user.token);
       //console.log("token: ", session?.user.token);
@@ -167,22 +206,20 @@ export default function FullFeaturedCrudGrid() {
               email: user.email,
               password_hash: user.password_hash,
               is_deleted: user.is_deleted,
-              role: user.role_id
+              role: user.role_id,
             }))
           );
         }
       );
-    
-  };
+    };
 
     if (status === "authenticated") {
       setIsReady(true);
       console.log(rows[0]);
-    fetchData();
+      fetchData();
     } else if (status === "unauthenticated") {
       redirect("/auth/signin");
     }
-
   }, [status]);
 
   // Only render the profile page if isReady is true
@@ -241,28 +278,26 @@ export default function FullFeaturedCrudGrid() {
     // Find the index of the row that was edited
     const rowIndex = rows.findIndex((row) => row.id === updatedRow.id);
 
-    
-
     // Replace the old row with the updated row
     const updatedRows = [...rows];
     updatedRows[rowIndex] = updatedRow;
 
     let result = 1;
 
-        switch (updatedRow.role) {
-          case "Admin":
-            result =  1;
-            break;
-          case 'Teacher':
-            result = 2;
-            break;
-          case 'Student':
-            result = 3;
-            break;
-          default:
-            result = 3;
-            break;
-        }
+    switch (updatedRow.role) {
+      case "Admin":
+        result = 1;
+        break;
+      case "Teacher":
+        result = 2;
+        break;
+      case "Student":
+        result = 3;
+        break;
+      default:
+        result = 3;
+        break;
+    }
 
     // Update the state with the new rows
     const userData = {
@@ -271,16 +306,14 @@ export default function FullFeaturedCrudGrid() {
       email: updatedRow.email,
       password_hash: updatedRow.password_hash,
       is_deleted: updatedRow.is_deleted,
-      role_id: result
+      role_id: result,
     };
 
-    // if id exists in database 
-    if (Number.isInteger(updatedRow.id))
-    {
+    // if id exists in database
+    if (Number.isInteger(updatedRow.id)) {
       updateUser(userData, updatedRow.id);
       console.log(userData);
     }
-    
 
     //createUser(userData);
 
@@ -292,6 +325,124 @@ export default function FullFeaturedCrudGrid() {
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);
+  };
+
+  const handleAddToClass = () => {
+    console.log("after pressed button:", selectedID);
+    setOpen(true);
+    //await createEnrollment()
+  };
+
+  const handleRemove = () => {
+    setOpenRemove(true);
+
+
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+    setOpenRemove(false);
+  };
+
+  const handleRemoveConfirm = async () => {
+
+    const findIdByName = (
+      classesArray: any[],
+      classNameToFind: string
+    ): number | undefined => {
+      const foundClass = classesArray.find(
+        (item) => item.className === classNameToFind
+      );
+      return foundClass?.id;
+    };
+
+    if (value != null) {
+      const classes = await getClass();
+
+      const userIds = selectedID.map((item: any) => item.id);
+
+      //console.log("Enrollment submitted:", classData, userIds);
+      let number = 0;
+
+
+      const enrollmentPromises = userIds.map(async (userId: number) => {
+
+
+        const enrollments = await getClassesFromUser(Number(userId), session?.user.token);
+
+        if (enrollments)
+        {
+        const enrollmentIds = enrollments.map((enrollment: any) => enrollment.enrollment_Id);
+
+        enrollmentIds.forEach(async (enrollmentId: any) => {
+          // Perform actions for each enrollmentId
+          console.log("Enrollment ID:", enrollmentId);
+          await deleteEnrollment(enrollmentId, session?.user.token);
+        });
+
+
+
+        console.log("response send to database: ", enrollmentIds);
+      }
+      });
+  
+      await Promise.all(enrollmentPromises);
+
+    }
+    setOpenRemove(false);
+  };
+
+  const handlesubmit = async () => {
+    const findIdByName = (
+      classesArray: any[],
+      classNameToFind: string
+    ): number | undefined => {
+      const foundClass = classesArray.find(
+        (item) => item.className === classNameToFind
+      );
+      return foundClass?.id;
+    };
+
+    if (value != null) {
+      const classes = await getClass();
+
+      const classData = findIdByName(classes, value as string);
+      const userIds = selectedID.map((item: any) => item.id);
+
+      //console.log("Enrollment submitted:", classData, userIds);
+      let number = 0;
+
+      const enrollmentPromises = userIds.map(async (userId: number) => {
+        
+        const enrollmentData = {
+          enrollmentId: 600,
+          userId: Number(userId),
+          ClasseId: classData,
+        };
+        console.log("response send to database: ",++number, enrollmentData);
+        await createEnrollment(enrollmentData);
+      });
+  
+      await Promise.all(enrollmentPromises);
+
+      //await createEnrollment(enrollmentData);
+
+      setOpen(false);
+      //setNoChecked(false);
+    }
+  };
+
+  const onRowsSelectionHandler = (ids: any[]) => {
+    const selectedRowsData = ids.map((id) => rows.find((row) => row.id === id));
+    setSelected(selectedRowsData[0]?.name);
+
+    const selectedIDs = selectedRowsData.map((row) => ({
+      id: row?.id.toString(),
+      surname: row?.surname.toString(),
+    }));
+
+    setSelectedID(selectedIDs);
+    console.log("this is the selected row: ", selectedIDs);
   };
 
   const columns: GridColDef[] = [
@@ -328,17 +479,17 @@ export default function FullFeaturedCrudGrid() {
       headerName: "Role",
       width: 120,
       editable: true,
-      type: 'singleSelect',
-      valueOptions: ['Admin', 'Teacher', 'Student'],
+      type: "singleSelect",
+      valueOptions: ["Admin", "Teacher", "Student"],
       valueGetter: (params) => {
         if (params.value == 1) {
-          return 'Admin';
+          return "Admin";
         }
         if (params.value == 2) {
-          return 'Teacher';
+          return "Teacher";
         }
         if (params.value == 3) {
-          return 'Student';
+          return "Student";
         }
         return params.value;
       },
@@ -395,6 +546,28 @@ export default function FullFeaturedCrudGrid() {
     <>
       <h1>Users administration</h1>
 
+      <Button
+        sx={{
+          borderRadius: 0,
+        }}
+        variant="contained"
+        color="info"
+        onClick={handleAddToClass}
+      >
+        Add to Class
+      </Button>
+
+    
+      <Button
+        sx={{
+          borderRadius: 0,
+        }}
+        variant="contained"
+        color="error"
+        onClick={handleRemove}
+      >
+        Remove from Class
+      </Button>
       <Box
         sx={{
           height: 500,
@@ -407,6 +580,112 @@ export default function FullFeaturedCrudGrid() {
           },
         }}
       >
+        <React.Fragment>
+          <Dialog open={open}>
+            <DialogTitle>
+              {" "}
+              Selected class: <strong>{value}</strong>{" "}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText
+                style={{ maxWidth: "400px", overflowWrap: "break-word" }}
+              >
+                {selectedID.map((item, index) => (
+                  <span key={index}>{item.surname}, </span>
+                ))}
+              </DialogContentText>
+              <br></br>
+              <Autocomplete
+                value={value}
+                onChange={(event: any, newValue: string | null) => {
+                  setValue(newValue);
+                }}
+                inputValue={inputValue}
+                onInputChange={(event, newInputValue) => {
+                  setInputValue(newInputValue);
+                }}
+                id="controllable-states-Klasse"
+                options={options}
+                sx={{ width: 300 }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Select class" />
+                )}
+                renderOption={(props, option) => (
+                  <li {...props} key={option}>
+                    {option}
+                  </li>
+                )}
+                renderTags={(tagValue, getTagProps) =>
+                  tagValue.map((option, index) => (
+                    <Chip
+                      {...getTagProps({ index })}
+                      key={option}
+                      label={option}
+                    />
+                  ))
+                }
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCancel}>Cancel</Button>
+              <Button onClick={handlesubmit}>Add to class</Button>
+            </DialogActions>
+          </Dialog>
+        </React.Fragment>
+
+        <React.Fragment>
+          <Dialog open={openRemove}>
+            <DialogTitle>
+              {" "}
+              Selected class: <strong>{value}</strong>{" "}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText
+                style={{ maxWidth: "400px", overflowWrap: "break-word" }}
+              >
+                {selectedID.map((item, index) => (
+                  <span key={index}>{item.surname}, </span>
+                ))}
+              </DialogContentText>
+              <br></br>
+              <Autocomplete
+                value={value}
+                onChange={(event: any, newValue: string | null) => {
+                  setValue(newValue);
+                }}
+                inputValue={inputValue}
+                onInputChange={(event, newInputValue) => {
+                  setInputValue(newInputValue);
+                }}
+                id="controllable-states-Klasse"
+                options={options}
+                sx={{ width: 300 }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Select class" />
+                )}
+                renderOption={(props, option) => (
+                  <li {...props} key={option}>
+                    {option}
+                  </li>
+                )}
+                renderTags={(tagValue, getTagProps) =>
+                  tagValue.map((option, index) => (
+                    <Chip
+                      {...getTagProps({ index })}
+                      key={option}
+                      label={option}
+                    />
+                  ))
+                }
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCancel}>Cancel</Button>
+              <Button onClick={handleRemoveConfirm}>Remove to class</Button>
+            </DialogActions>
+          </Dialog>
+        </React.Fragment>
+
         <DataGrid
           rows={rows}
           columns={columns}
@@ -414,6 +693,8 @@ export default function FullFeaturedCrudGrid() {
           rowModesModel={rowModesModel}
           onRowModesModelChange={handleRowModesModelChange}
           onRowEditStop={handleRowEditStop}
+          checkboxSelection
+          onRowSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
           processRowUpdate={handleProcessRowUpdate}
           slots={{
             toolbar: EditToolbar,
@@ -423,10 +704,6 @@ export default function FullFeaturedCrudGrid() {
           }}
         />
       </Box>
-
-      <h1>Enrollments</h1>
-
-
     </>
   );
 }

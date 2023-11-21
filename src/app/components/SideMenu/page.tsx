@@ -14,6 +14,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import scss from "./SideMenu.module.scss";
 import TaskIcon from '@mui/icons-material/Task';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import SchoolIcon from '@mui/icons-material/School';
 
 import {
   Divider,
@@ -55,31 +56,28 @@ const closedMixin = (theme: Theme): CSSObject => ({
 
 const SideMenu = () => {
 
-  let menuRouteList = ["calendar", "profile", ""];
-  let menuListTranslations = ["calendar", "Profile", "Sign Out"];
+  let menuRouteList = ["calendar", "submission","profile", ""];
+  let menuListTranslations = ["calendar", "Submission","Profile", "Sign Out"];
   let menuListIcons = [
   <CalendarMonthIcon/>,
+    <TaskIcon/>,
     <Person2Icon />,
     <ExitToAppIcon />,
   ];
-
-
 const { data: session} = useSession();
 
 if (session?.user.role_id == 1)
 {
-  menuRouteList = ["calendar","opgave","data", "profile", "settings", ""];
+  menuRouteList = ["calendar","data", "profile", "settings", ""];
 
-  menuListTranslations = ["calendar","opgave","Data", "Profile", "Settings", "Sign Out"];
+  menuListTranslations = ["calendar","Data","school", "Profile", "Settings", "Sign Out"];
   
   menuListIcons = [
 <CalendarMonthIcon/>,
-<TaskIcon/>,
   <EqualizerIcon />,
   <Person2Icon />,
   <Settings />,
   <ExitToAppIcon />,
-
   ];
 } 
 
@@ -92,8 +90,8 @@ if (session?.user.role_id == 2)
   
   menuListIcons = [
 <CalendarMonthIcon/>,
-<TaskIcon/>,
 <PostAddIcon/>,
+<TaskIcon/>,
   <Person2Icon />,
   <ExitToAppIcon />,
 

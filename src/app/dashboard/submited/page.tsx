@@ -248,10 +248,7 @@ export default function FullFeaturedCrudGrid() {
     deleteSubmission(rowId);
     
   };
-
-
-
-
+  
   const handleCancelClick = (id: GridRowId) => () => {
     setRowModesModel({
       ...rowModesModel,

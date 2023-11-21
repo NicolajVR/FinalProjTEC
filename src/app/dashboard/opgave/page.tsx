@@ -209,7 +209,6 @@ export default function FullFeaturedCrudGrid() {
 
   useEffect(() => {
     const fetchData = async () => {
-      //console.log("TOKEN: ",session?.user.token);
       const classes = await getClassesFromUser(
         session?.user.user_id as number,
         session?.user.token

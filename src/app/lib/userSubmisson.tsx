@@ -3,6 +3,7 @@ export async function getSubmissions(token: any) {
       const response = await fetch("https://localhost:7136/api/UserSubmission", {
         method: "GET",
         headers: {
+            
             Authorization: 'Bearer ' + token,
         },
       });
@@ -15,6 +16,26 @@ export async function getSubmissions(token: any) {
       console.log(error);
     }
   }
+
+  export async function createSubmission(submission: any,) {
+    try {
+      const response = await fetch("https://localhost:7136/api/UserSubmission", {
+        method: "POST",
+        body: JSON.stringify(submission),
+        headers: {
+            "content-type": "application/json",
+        },
+      });
+      console.log(response);
+      if (!response.ok) {
+        throw new Error("Failed to create user");
+      }
+      return await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
 
 
   export async function deleteSubmission(id: number) {
@@ -31,4 +52,6 @@ export async function getSubmissions(token: any) {
       console.log(error);
     }
   }
+
+
   
