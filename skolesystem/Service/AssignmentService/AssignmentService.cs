@@ -26,11 +26,18 @@ namespace skolesystem.Service.AssignmentService
                 assignment_id = a.assignment_id,
                 assignment_deadline = a.assignment_deadline,
                 assignment_description = a.assignment_description,
+                is_deleted = a.is_Deleted,
                 Classe = new AssignmentClasseResponse
                 {
                     class_id = a.Classe.class_id,
                     class_name = a.Classe.class_name
+                },
+                Subjects = new AssignmentSubjectResponse
+                {
+                     subject_id = a.Subjects.subject_id,
+                     subject_name = a.Subjects.subject_name
                 }
+
             }).ToList();
         }
         public async Task<AssignmentResponse> GetById(int AssignmentId)
@@ -53,6 +60,7 @@ namespace skolesystem.Service.AssignmentService
             Assignment assignment = new Assignment
             {
                 class_id = newAssignment.classeId,
+                subject_id = newAssignment.subjectId,
                 assignment_deadline = newAssignment.assignment_Deadline,
                 assignment_description = newAssignment.assignment_Description
             };
@@ -74,7 +82,6 @@ namespace skolesystem.Service.AssignmentService
             {
                 assignment_deadline = updateAssignment.assignment_Deadline,
                 assignment_description = updateAssignment.assignment_Description,
-                class_id = updateAssignment.classeId,
                 // UserIdxxx = updateAssignment.UserId,
             };
 

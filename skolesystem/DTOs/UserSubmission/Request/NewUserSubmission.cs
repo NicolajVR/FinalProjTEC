@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace skolesystem.DTOs.UserSubmission.Request
 {
-	public class NewUserSubmission
-	{
+    public class NewUserSubmission
+    {
         [Required]
         [Range(1, int.MaxValue)]
         public int submissionId { get; set; }
@@ -15,15 +15,16 @@ namespace skolesystem.DTOs.UserSubmission.Request
         public string userSubmission_text { get; set; }
 
         [Required]
-        public DateTime userSubmission_date { get; set; }
+        public string userSubmission_date { get; set; }
 
         [Required]
         [Range(1, int.MaxValue)]
         public int UserId { get; set; }
+
+        public bool is_deleted { get; set; }
 
         [Required]
         [Range(1, int.MaxValue)]
         public int assignmentId { get; set; }
     }
 }
-

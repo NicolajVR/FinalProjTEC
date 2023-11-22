@@ -19,6 +19,8 @@ using skolesystem.Repository.EnrollmentRepository;
 using skolesystem.Repository.EnrollmentsRepository;
 using skolesystem.Service.EnrollmentService;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -79,7 +81,7 @@ builder.Services.AddSwaggerGen(c =>
 // Configure MySQL database connection
 builder.Services.AddDbContext<User_informationDbContext>(
     o => o.UseMySql(builder.Configuration.GetConnectionString("MySQL"), new MySqlServerVersion(new Version(8, 0, 35))));
-builder.Services.AddDbContext<SkemaDbContext>(
+builder.Services.AddDbContext<ScheduleDbContext>(
     o => o.UseMySql(builder.Configuration.GetConnectionString("MySQL"), new MySqlServerVersion(new Version(8, 0, 35))));
 builder.Services.AddDbContext<UsersDbContext>(
     o => o.UseMySql(builder.Configuration.GetConnectionString("MySQL"), new MySqlServerVersion(new Version(8, 0, 35))));
@@ -102,7 +104,7 @@ builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 
 // Register your repository
 builder.Services.AddScoped<IUser_informationRepository, User_informationRepository>();
-builder.Services.AddScoped<ISkemaRepository, SkemaRepository>();
+builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IAbsenceRepository, AbsenceRepository>();
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
@@ -115,7 +117,7 @@ builder.Services.AddScoped<IEnrollmentRepository, EnrollmentsRepository>();
 // Register Service
 
 builder.Services.AddScoped<IUser_informationService, User_informationService>();
-builder.Services.AddScoped<ISkemaService, SkemaService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IAbsenceService, AbsenceService>();
 builder.Services.AddScoped<ISubjectService, SubjectService>();
@@ -124,7 +126,8 @@ builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 builder.Services.AddScoped<IUserSubmissionService, UserSubmissionService>();
 builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
 
-
+// Add AutoMapper configuration
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
 var app = builder.Build();
 

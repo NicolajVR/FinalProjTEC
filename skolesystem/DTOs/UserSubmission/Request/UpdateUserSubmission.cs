@@ -15,7 +15,7 @@ namespace skolesystem.DTOs.UserSubmission.Request
         public string userSubmission_text { get; set; }
 
         [Required]
-        public DateTime userSubmission_date { get; set; }
+        public string userSubmission_date { get; set; }
     }
 }
 

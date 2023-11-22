@@ -71,20 +71,13 @@ namespace skolesystem.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> CreateAbsence(AbsenceCreateDto absenceDto)
         {
-            var absence = new Absence
-            {
-                user_id = absenceDto.user_id,
-                teacher_id = absenceDto.teacher_id,
-                class_id = absenceDto.class_id,
-                absence_date = absenceDto.absence_date,
-                reason = absenceDto.reason,
-                
-            };
+            // Call the service method to create the absence
+            var createdAbsenceDto = await _absenceService.CreateAbsence(absenceDto);
 
-            await _absenceService.CreateAbsence(absence);
-
-            return CreatedAtAction(nameof(GetAbsenceById), new { id = absence.absence_id }, absenceDto);
+            // Return the created AbsenceReadDto in the response
+            return CreatedAtAction(nameof(GetAbsenceById), new { id = createdAbsenceDto.absence_id }, createdAbsenceDto);
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAbsence(int id, AbsenceUpdateDto absenceDto)
@@ -96,17 +89,14 @@ namespace skolesystem.Controllers
                 return NotFound();
             }
 
-            existingAbsence.user_id = absenceDto.user_id;
-            existingAbsence.teacher_id = absenceDto.teacher_id;
-            existingAbsence.class_id = absenceDto.class_id;
-            existingAbsence.absence_date = absenceDto.absence_date;
-            existingAbsence.reason = absenceDto.reason;
-            // Map other fields as needed
-
-            await _absenceService.UpdateAbsence(id, existingAbsence);
+            // Pass absenceDto directly to the UpdateAbsence method
+            await _absenceService.UpdateAbsence(id, absenceDto);
 
             return NoContent();
         }
+
+
+
 
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

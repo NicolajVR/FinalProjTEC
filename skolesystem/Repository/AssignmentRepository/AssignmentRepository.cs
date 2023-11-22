@@ -18,11 +18,14 @@ namespace skolesystem.Repository.AssignmentRepository
         public async Task<Assignment> DeleteAssignment(int assignmentId)
         {
             Assignment deleteAssignment = await _context.Assignments
-                .FirstOrDefaultAsync(Assignment => assignmentId == Assignment.assignment_id);
+.FirstOrDefaultAsync(Assignment => assignmentId == Assignment.assignment_id);
 
             if (deleteAssignment != null)
             {
-                _context.Assignments.Remove(deleteAssignment);
+                
+                    deleteAssignment.is_Deleted = true;
+                    _context.Entry(deleteAssignment).State = EntityState.Modified;
+      
                 await _context.SaveChangesAsync();
             }
             return deleteAssignment;
@@ -41,10 +44,8 @@ namespace skolesystem.Repository.AssignmentRepository
                 .FirstOrDefaultAsync(assignment => assignment.assignment_id == assignmentId);
             if (updateAssignment != null)
             {
-                updateAssignment.Classe = assignment.Classe;
                 updateAssignment.assignment_description = assignment.assignment_description;
                 updateAssignment.assignment_deadline = assignment.assignment_deadline;
-
                 await _context.SaveChangesAsync();
             }
             return updateAssignment;
@@ -52,13 +53,14 @@ namespace skolesystem.Repository.AssignmentRepository
 
         public async Task<List<Assignment>> SelectAllAssignment()
         {
-            return await _context.Assignments.Include(p => p.Classe).ToListAsync();
+            return await _context.Assignments.Include(p => p.Classe).Include(a => a.Subjects).ToListAsync();
+
         }
 
         public async Task<Assignment> SelectAssignmentById(int assignmentId)
         {
             return await _context.Assignments
-            .Include(p => p.Classe).
+            .Include(p => p.Classe).Include(b => b.Subjects).
                 FirstOrDefaultAsync(a => a.assignment_id == assignmentId);
         }
     }

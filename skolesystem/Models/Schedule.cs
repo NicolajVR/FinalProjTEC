@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace skolesystem.Models
 {
-    public class Skema
+    public class Schedule
     {
         [Key]
         public int schedule_id { get; set; }

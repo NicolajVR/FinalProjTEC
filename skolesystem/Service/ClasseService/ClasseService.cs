@@ -55,6 +55,8 @@ namespace skolesystem.Service.ClasseService
                 className = Classe.class_name,
                 location = Classe.location
             };
+
+
         }
         public async Task<ClasseResponse> Update(int ClasseId, UpdateClasse updateClasse)
         {

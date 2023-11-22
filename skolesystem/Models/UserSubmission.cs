@@ -13,10 +13,9 @@ namespace skolesystem.Models
         [Column(TypeName = "nvarchar(255)")]
         public string submission_text { get; set; }
 
-        [Required]
-        public DateTime submission_date { get; set; }
+        public string submission_date { get; set; }
 
-        public int is_deleted { get; set; }
+        public bool is_deleted { get; set; }
 
         [ForeignKey("Assignment")]
         public int assignment_id { get; set; }

@@ -50,6 +50,8 @@ namespace skolesystem.Service.SubjectService
                 Id = subject.subject_id,
                 subjectname = subject.subject_name
             };
+
+
         }
         public async Task<SubjectResponse> Update(int SubjectId, UpdateSubject updateSubject)
         {

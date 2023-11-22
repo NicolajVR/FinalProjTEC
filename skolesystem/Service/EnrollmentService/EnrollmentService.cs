@@ -84,13 +84,12 @@ namespace skolesystem.Service.EnrollmentService
             };
         }
 
-        
+
 
         public async Task<EnrollmentResponse?> Create(NewEnrollment newEnrollment)
         {
             Enrollments Enrollment = new Enrollments
             {
-                enrollment_id = newEnrollment.EnrollmentId,
                 user_id = newEnrollment.UserId,
                 class_id = newEnrollment.ClasseId
             };
@@ -114,6 +113,8 @@ namespace skolesystem.Service.EnrollmentService
                 }
             };
         }
+
+
 
         public async Task<EnrollmentResponse?> Update(int EnrollmentId, UpdateEnrollment updateEnrollment)
         {

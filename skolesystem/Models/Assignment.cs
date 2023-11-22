@@ -16,9 +16,9 @@ namespace skolesystem.Models
         public string assignment_description { get; set; }
 
         [Required] 
-        public DateTime assignment_deadline { get; set; }
+        public string assignment_deadline { get; set; }
 
-        public int is_Deleted { get; set; }
+        public bool is_Deleted { get; set; }
 
         public List<UserSubmission> userSubmissions { get; set; }
 
@@ -26,6 +26,10 @@ namespace skolesystem.Models
         [ForeignKey("Classe")]
         public int class_id { get; set; }
         public Classe Classe { get; set; }
+
+        [ForeignKey("Subjects")]
+        public int subject_id { get; set; }
+        public Subjects Subjects { get; set; }
 
 
 

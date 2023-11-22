@@ -12,7 +12,11 @@ namespace skolesystem.DTOs.Assignment.Request
         public int classeId { get; set; }
 
         [Required]
-        public DateTime assignment_Deadline { get; set; }
+        [Range(1, int.MaxValue)]
+        public int subjectId{ get; set; }
+
+        [Required]
+        public string assignment_Deadline { get; set; }
 
         [Required]
         public string assignment_Description { get; set; }

@@ -35,6 +35,8 @@ namespace skolesystem.Repository.EnrollmentsRepository
             return Enrollments;
         }
 
+
+
         public async Task<List<Enrollments>> SelectAllEnrollments()
         {
             return await _context.enrollments.Include(a => a.Classe).Include(u => u.User).ToListAsync();

@@ -1,6 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
 using skolesystem.Data;
 using skolesystem.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace skolesystem.Repository
 {
@@ -18,10 +23,12 @@ namespace skolesystem.Repository
     public class AbsenceRepository : IAbsenceRepository
     {
         private readonly AbsenceDbContext _context;
+        private readonly IMapper _mapper;
 
-        public AbsenceRepository(AbsenceDbContext context)
+        public AbsenceRepository(AbsenceDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<Absence> GetById(int id)
@@ -54,7 +61,6 @@ namespace skolesystem.Repository
                 throw new ArgumentException("Absence not found");
             }
 
-            // Map properties from Absence to the entity
             existingAbsence.user_id = absence.user_id;
             existingAbsence.teacher_id = absence.teacher_id;
             existingAbsence.class_id = absence.class_id;

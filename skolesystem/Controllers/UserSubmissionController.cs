@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using skolesystem.Authorization;
 using skolesystem.DTOs.UserSubmission.Request;
 using skolesystem.DTOs.UserSubmission.Response;
 using skolesystem.Service.UserSubmissionService;
@@ -17,6 +18,7 @@ namespace skolesystem.Controllers
             _UserSubmissionService = UserSubmissionService;
         }
 
+        [Authorize(2,3)]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

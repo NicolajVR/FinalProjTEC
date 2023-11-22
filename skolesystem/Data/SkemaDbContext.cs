@@ -3,13 +3,13 @@ using skolesystem.Models;
 
 namespace skolesystem.Data
 {
-    public class SkemaDbContext : DbContext
+    public class ScheduleDbContext : DbContext
     {
-        public SkemaDbContext(DbContextOptions<SkemaDbContext> options) : base(options)
+        public ScheduleDbContext(DbContextOptions<ScheduleDbContext> options) : base(options)
         {
 
         }
 
-        public DbSet<Skema> Skema { get; set; }
+        public DbSet<Schedule> Schedule { get; set; }
     }
 }

@@ -7,73 +7,71 @@ using skolesystem.Data;
 using skolesystem.DTOs;
 using skolesystem.Models;
 
-public interface ISkemaRepository
+public interface IScheduleRepository
 {
-    Task<IEnumerable<Skema>> GetAll();
-    Task<Skema> GetById(int id);
-    Task<int> Create(Skema skema);
-    Task Update(int id, SkemaCreateDto skemaDto);
+    Task<IEnumerable<Schedule>> GetAll();
+    Task<Schedule> GetById(int id);
+    Task<int> Create(Schedule schedule);
+    Task Update(int id, ScheduleCreateDto scheduleDto);
     Task Delete(int id);
 }
 
 
-public class SkemaRepository : ISkemaRepository
+public class ScheduleRepository : IScheduleRepository
 {
-    private readonly SkemaDbContext _context;
+    private readonly ScheduleDbContext _context;
 
-    public SkemaRepository(SkemaDbContext context)
+    public ScheduleRepository(ScheduleDbContext context)
     {
         _context = context;
     }
 
-    public async Task<IEnumerable<Skema>> GetAll()
+    public async Task<IEnumerable<Schedule>> GetAll()
     {
-        return await _context.Skema.ToListAsync();
+        return await _context.Schedule.ToListAsync();
     }
 
-    public async Task<Skema> GetById(int id)
+    public async Task<Schedule> GetById(int id)
     {
-        return await _context.Skema.FindAsync(id);
+        return await _context.Schedule.FindAsync(id);
     }
 
-    public async Task<int> Create(Skema skema)
+    public async Task<int> Create(Schedule schedule)
     {
-        _context.Skema.Add(skema);
+        _context.Schedule.Add(schedule);
         await _context.SaveChangesAsync();
-        return skema.schedule_id;
+        return schedule.schedule_id;
     }
 
-    public async Task Update(int id, SkemaCreateDto skemaDto)
+    public async Task Update(int id, ScheduleCreateDto scheduleDto)
     {
-        var skemaToUpdate = await _context.Skema.FindAsync(id);
+        var scheduleToUpdate = await _context.Schedule.FindAsync(id);
 
-        if (skemaToUpdate == null)
+        if (scheduleToUpdate == null)
         {
-            throw new ArgumentException("Skema not found");
+            throw new ArgumentException("Schedule not found");
         }
 
         // Map properties from DTO to the entity
-        skemaToUpdate.subject_id = skemaDto.subject_id;
-        skemaToUpdate.day_of_week = skemaDto.day_of_week;
-        skemaToUpdate.subject_name = skemaDto.subject_name;
-        skemaToUpdate.start_time = skemaDto.start_time;
-        skemaToUpdate.end_time = skemaDto.end_time;
-        skemaToUpdate.class_id = skemaDto.class_id;
+        scheduleToUpdate.subject_id = scheduleDto.subject_id;
+        scheduleToUpdate.day_of_week = scheduleDto.day_of_week;
+        scheduleToUpdate.end_time = scheduleDto.end_time;
+        scheduleToUpdate.class_id = scheduleDto.class_id;
 
         await _context.SaveChangesAsync();
     }
 
     public async Task Delete(int id)
     {
-        var skemaToDelete = await _context.Skema.FindAsync(id);
+        var scheduleToDelete = await _context.Schedule.FindAsync(id);
 
-        if (skemaToDelete == null)
+        if (scheduleToDelete == null)
         {
-            throw new ArgumentException("Skema not found");
+            throw new ArgumentException("Schedule not found");
         }
 
-        _context.Skema.Remove(skemaToDelete);
+        _context.Schedule.Remove(scheduleToDelete);
         await _context.SaveChangesAsync();
     }
-}
 
+}

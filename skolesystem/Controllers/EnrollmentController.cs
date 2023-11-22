@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using skolesystem.Authorization;
 using skolesystem.DTOs.Enrollment.Request;
 using skolesystem.DTOs.Enrollment.Response;
 using skolesystem.Service.EnrollmentService;
@@ -17,6 +18,7 @@ namespace skolesystem.Controllers
             _EnrollmentService = EnrollmentService;
         }
 
+        [Authorize(1,2) ]
         [HttpGet("ByUser/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -45,7 +47,7 @@ namespace skolesystem.Controllers
                 return Problem(ex.Message);
             }
         }
-
+        [Authorize(1,2,3)]
         [HttpGet("ByClass/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -145,7 +147,7 @@ namespace skolesystem.Controllers
                 return Problem(ex.Message);
             }
         }
-
+        [Authorize(1)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using skolesystem.Authorization;
 using skolesystem.DTOs.Assignment.Request;
 using skolesystem.DTOs.Assignment.Response;
 using skolesystem.Service.AssignmentService;
@@ -45,6 +46,7 @@ namespace skolesystem.Controllers
             }
         }
 
+        [Authorize(2)]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -69,6 +71,7 @@ namespace skolesystem.Controllers
             }
         }
 
+        [Authorize(2)]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -92,6 +95,7 @@ namespace skolesystem.Controllers
             }
         }
 
+        [Authorize(2)]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -115,6 +119,7 @@ namespace skolesystem.Controllers
             }
         }
 
+        [Authorize(2)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

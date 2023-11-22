@@ -6,10 +6,10 @@ using skolesystem.Data;
 
 #nullable disable
 
-namespace skolesystem.Migrations.SkemaDb
+namespace skolesystem.Migrations.ScheduleDb
 {
-    [DbContext(typeof(SkemaDbContext))]
-    partial class SkemaDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ScheduleDbContext))]
+    partial class ScheduleDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -18,7 +18,7 @@ namespace skolesystem.Migrations.SkemaDb
                 .HasAnnotation("ProductVersion", "7.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("skolesystem.Models.Skema", b =>
+            modelBuilder.Entity("skolesystem.Models.Schedule", b =>
                 {
                     b.Property<int>("schedule_id")
                         .ValueGeneratedOnAdd()
@@ -42,7 +42,7 @@ namespace skolesystem.Migrations.SkemaDb
 
                     b.HasKey("schedule_id");
 
-                    b.ToTable("Skema");
+                    b.ToTable("Schedule");
                 });
 #pragma warning restore 612, 618
         }

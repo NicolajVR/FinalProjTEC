@@ -16,6 +16,8 @@ namespace skolesystem.Models
 
         [Required]
         public int is_deleted { get; set; }
+
+        public List<Assignment> assignments { get; set; }
     }
 }
 

@@ -6,7 +6,6 @@ namespace skolesystem.DTOs.Enrollment.Request
 	public class NewEnrollment
 	{
         [Required]
-        [Range(1, int.MaxValue)]
         public int EnrollmentId { get; set; }
 
         [Required]

@@ -2,7 +2,7 @@
 
 namespace skolesystem.DTOs
 {
-    public class SkemaCreateDto
+    public class ScheduleCreateDto
     {
         public int schedule_id { get; set; }
 

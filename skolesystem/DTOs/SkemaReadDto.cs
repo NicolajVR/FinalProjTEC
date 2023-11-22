@@ -1,6 +1,6 @@
 ﻿namespace skolesystem.DTOs
 {
-    public class SkemaReadDto
+    public class ScheduleReadDto
     {
         public int schedule_id { get; set; }
 

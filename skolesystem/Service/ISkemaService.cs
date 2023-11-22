@@ -4,46 +4,54 @@ using System.Threading.Tasks;
 using skolesystem.DTOs;
 using skolesystem.Models;
 
-public interface ISkemaService
+public interface IScheduleService
 {
-    Task<IEnumerable<Skema>> GetAllSchemata();
-    Task<Skema> GetSkemaById(int id);
-    Task<int> CreateSkema(Skema skema);
-    Task UpdateSkema(int id, SkemaCreateDto skemaDto);
-    Task DeleteSkema(int id);
+    Task<IEnumerable<Schedule>> GetAllSchemata();
+    Task<Schedule> GetScheduleById(int id);
+    Task<int> CreateSchedule(Schedule schedule);
+    Task UpdateSchedule(int id, ScheduleCreateDto scheduleDto);
+    Task DeleteSchedule(int id);
 }
 
-public class SkemaService : ISkemaService
+public class ScheduleService : IScheduleService
 {
-    private readonly ISkemaRepository _skemaRepository;
+    private readonly IScheduleRepository _scheduleRepository;
 
-    public SkemaService(ISkemaRepository skemaRepository)
+    public ScheduleService(IScheduleRepository scheduleRepository)
     {
-        _skemaRepository = skemaRepository;
+        _scheduleRepository = scheduleRepository;
     }
 
-    public async Task<IEnumerable<Skema>> GetAllSchemata()
+    public async Task<IEnumerable<Schedule>> GetAllSchemata()
     {
-        return await _skemaRepository.GetAll();
+        return await _scheduleRepository.GetAll();
     }
 
-    public async Task<Skema> GetSkemaById(int id)
+    public async Task<Schedule> GetScheduleById(int id)
     {
-        return await _skemaRepository.GetById(id);
+        return await _scheduleRepository.GetById(id);
     }
 
-    public async Task<int> CreateSkema(Skema skema)
+    public async Task<int> CreateSchedule(Schedule schedule)
     {
-        return await _skemaRepository.Create(skema);
+        return await _scheduleRepository.Create(schedule);
     }
 
-    public async Task UpdateSkema(int id, SkemaCreateDto skemaDto)
+    public async Task UpdateSchedule(int id, ScheduleCreateDto scheduleDto)
     {
-        await _skemaRepository.Update(id, skemaDto);
+        var existingSchedule = await _scheduleRepository.GetById(id);
+
+        if (existingSchedule == null)
+        {
+            throw new ArgumentException($"Schedule with ID {id} not found.");
+        }
+
+        await _scheduleRepository.Update(id, scheduleDto);
     }
 
-    public async Task DeleteSkema(int id)
+
+    public async Task DeleteSchedule(int id)
     {
-        await _skemaRepository.Delete(id);
+        await _scheduleRepository.Delete(id);
     }
 }

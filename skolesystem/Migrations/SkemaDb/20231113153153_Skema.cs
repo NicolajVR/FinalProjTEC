@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace skolesystem.Migrations.SkemaDb
+namespace skolesystem.Migrations.ScheduleDb
 {
     /// <inheritdoc />
-    public partial class Skema : Migration
+    public partial class Schedule : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,7 @@ namespace skolesystem.Migrations.SkemaDb
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Skema",
+                name: "Schedule",
                 columns: table => new
                 {
                     schedule_id = table.Column<int>(type: "int", nullable: false)
@@ -29,7 +29,7 @@ namespace skolesystem.Migrations.SkemaDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Skema", x => x.schedule_id);
+                    table.PrimaryKey("PK_Schedule", x => x.schedule_id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
         }
@@ -38,7 +38,7 @@ namespace skolesystem.Migrations.SkemaDb
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Skema");
+                name: "Schedule");
         }
     }
 }

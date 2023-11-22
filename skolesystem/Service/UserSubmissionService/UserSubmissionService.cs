@@ -8,8 +8,8 @@ using skolesystem.Repository.UserSubmissionRepository;
 
 namespace skolesystem.Service.UserSubmissionService
 {
-	public class UserSubmissionService : IUserSubmissionService
-	{
+    public class UserSubmissionService : IUserSubmissionService
+    {
         private readonly IUserSubmissionRepository _UserSubmissionRepository;
         private readonly IAssignmentRepository _AssignmentRepository;
         private readonly IUsersRepository _UsersRepository;
@@ -30,6 +30,7 @@ namespace skolesystem.Service.UserSubmissionService
                 userSubmission_Id = a.submission_id,
                 userSubmission_text = a.submission_text,
                 userSubmission_date = a.submission_date,
+                is_deleted = a.is_deleted,
                 userSubmissionAssignmentResponse = new UserSubmissionAssignmentResponse
                 {
                     opgave_Id = a.Assignment.assignment_id,
@@ -46,9 +47,54 @@ namespace skolesystem.Service.UserSubmissionService
             }).ToList();
         }
 
-        public Task<List<UserSubmission>> GetAllUserSubmissionsByAssignment(int assignmentId)
+        public async Task<List<UserSubmissionResponse>> GetAllUserSubmissionsByAssignment(int assignmentId)
         {
-            return _UserSubmissionRepository.GetUserSubmissionsByAssignment(assignmentId);
+            List<UserSubmission> UserSubmission = await _UserSubmissionRepository.GetAllUserSubmissionsByAssignment(assignmentId);
+            return UserSubmission.Select(a => new UserSubmissionResponse
+            {
+                userSubmission_Id = a.submission_id,
+                userSubmission_text = a.submission_text,
+                userSubmission_date = a.submission_date,
+                is_deleted = a.is_deleted,
+                userSubmissionAssignmentResponse = new UserSubmissionAssignmentResponse
+                {
+                    opgave_Id = a.Assignment.assignment_id,
+                    opgave_Description = a.Assignment.assignment_description,
+                    opgave_Deadline = a.Assignment.assignment_deadline,
+                    is_Deleted = a.Assignment.is_Deleted
+                },
+                userSubmissionUserResponse = new UserSubmissionUserResponse
+                {
+                    user_id = a.User.user_id,
+                    surname = a.User.surname,
+                    email = a.User.email
+                }
+            }).ToList();
+        }
+        public async Task<List<UserSubmissionResponse>> GetAllUserSubmissionsbyUser(int userId)
+        {
+            List<UserSubmission> UserSubmission = await _UserSubmissionRepository.GetUserSubmissionsByUsers(userId);
+            return UserSubmission.Select(a => new UserSubmissionResponse
+            {
+                userSubmission_Id = a.submission_id,
+                userSubmission_text = a.submission_text,
+                userSubmission_date = a.submission_date,
+                is_deleted = a.is_deleted,
+                userSubmissionUserResponse = new UserSubmissionUserResponse
+                {
+                    user_id = a.User.user_id,
+                    surname = a.User.surname,
+                    email = a.User.email
+                },
+                userSubmissionAssignmentResponse = new UserSubmissionAssignmentResponse
+                {
+                    opgave_Id = a.Assignment.assignment_id,
+                    opgave_Description = a.Assignment.assignment_description,
+                    opgave_Deadline = a.Assignment.assignment_deadline,
+                    is_Deleted = a.Assignment.is_Deleted
+                }
+
+            }).ToList();
         }
 
         public async Task<UserSubmissionResponse> GetById(int UserSubmissionId)
@@ -59,6 +105,7 @@ namespace skolesystem.Service.UserSubmissionService
                 userSubmission_Id = UserSubmission.submission_id,
                 userSubmission_text = UserSubmission.submission_text,
                 userSubmission_date = UserSubmission.submission_date,
+                // is_deleted = UserSubmission.is_deleted,
                 userSubmissionAssignmentResponse = new UserSubmissionAssignmentResponse
                 {
                     opgave_Id = UserSubmission.Assignment.assignment_id,
@@ -80,6 +127,7 @@ namespace skolesystem.Service.UserSubmissionService
             {
                 submission_text = newUserSubmission.userSubmission_text,
                 submission_date = newUserSubmission.userSubmission_date,
+                is_deleted = newUserSubmission.is_deleted,
                 user_id = newUserSubmission.UserId,
                 assignment_id = newUserSubmission.assignmentId
             };
@@ -91,7 +139,7 @@ namespace skolesystem.Service.UserSubmissionService
             {
                 userSubmission_text = UserSubmission.submission_text,
                 userSubmission_date = UserSubmission.submission_date,
-                
+                is_deleted = UserSubmission.is_deleted,
                 userSubmissionAssignmentResponse = new UserSubmissionAssignmentResponse
                 {
                     opgave_Id = UserSubmission.Assignment.assignment_id,
@@ -148,7 +196,11 @@ namespace skolesystem.Service.UserSubmissionService
             return (result != null);
         }
 
-        
+        public async Task SoftDeleteUserSubmission(int id)
+        {
+            await _UserSubmissionRepository.SoftDeleteUserSubmission(id);
+        }
+
+
     }
 }
-

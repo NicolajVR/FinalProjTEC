@@ -13,58 +13,58 @@ namespace skolesystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SkemaController : ControllerBase
+    public class ScheduleController : ControllerBase
     {
-        private readonly ISkemaRepository _skemaRepository;
+        private readonly IScheduleRepository _scheduleRepository;
 
-        public SkemaController(ISkemaRepository skemaRepository)
+        public ScheduleController(IScheduleRepository scheduleRepository)
         {
-            _skemaRepository = skemaRepository;
+            _scheduleRepository = scheduleRepository;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var skemaList = await _skemaRepository.GetAll();
-            return Ok(skemaList);
+            var scheduleList = await _scheduleRepository.GetAll();
+            return Ok(scheduleList);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var skema = await _skemaRepository.GetById(id);
+            var schedule = await _scheduleRepository.GetById(id);
 
-            if (skema == null)
+            if (schedule == null)
             {
                 return NotFound();
             }
 
-            return Ok(skema);
+            return Ok(schedule);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] SkemaCreateDto skemaDto)
+        public async Task<IActionResult> Create([FromBody] ScheduleCreateDto scheduleDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var skemaId = await _skemaRepository.Create(new Skema
+            var scheduleId = await _scheduleRepository.Create(new Schedule
             {
-                subject_id = skemaDto.subject_id,
-                day_of_week = skemaDto.day_of_week,
-                subject_name = skemaDto.subject_name,
-                start_time = skemaDto.start_time,
-                end_time = skemaDto.end_time,
-                class_id = skemaDto.class_id
+                subject_id = scheduleDto.subject_id,
+                day_of_week = scheduleDto.day_of_week,
+                subject_name = scheduleDto.subject_name,
+                start_time = scheduleDto.start_time,
+                end_time = scheduleDto.end_time,
+                class_id = scheduleDto.class_id
             });
 
-            return CreatedAtAction(nameof(GetById), new { id = skemaId }, null);
+            return CreatedAtAction(nameof(GetById), new { id = scheduleId }, null);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] SkemaCreateDto skemaDto)
+        public async Task<IActionResult> Update(int id, [FromBody] ScheduleCreateDto scheduleDto)
         {
             if (!ModelState.IsValid)
             {
@@ -73,7 +73,7 @@ namespace skolesystem.Controllers
 
             try
             {
-                await _skemaRepository.Update(id, skemaDto);
+                await _scheduleRepository.Update(id, scheduleDto);
                 return NoContent();
             }
             catch (ArgumentException ex)
@@ -87,7 +87,7 @@ namespace skolesystem.Controllers
         {
             try
             {
-                await _skemaRepository.Delete(id);
+                await _scheduleRepository.Delete(id);
                 return NoContent();
             }
             catch (ArgumentException ex)

@@ -410,7 +410,6 @@ C:/Users/Frede/source/repos/admin-panel-web-api/skolesystem/bin/Debug/net7.0/Aut
 /Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/Swashbuckle.AspNetCore.SwaggerUI.dll
 /Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/System.CodeDom.dll
 /Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/System.Configuration.ConfigurationManager.dll
-/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/System.Diagnostics.DiagnosticSource.dll
 /Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/System.Drawing.Common.dll
 /Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/System.IdentityModel.Tokens.Jwt.dll
 /Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/System.Memory.Data.dll
@@ -460,3 +459,16 @@ C:/Users/Frede/source/repos/admin-panel-web-api/skolesystem/bin/Debug/net7.0/Aut
 =======
 >>>>>>> refs/remotes/origin/Frederik
 /Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/xunit.runner.reporters.netcoreapp10.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/xunit.runner.utility.netcoreapp10.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/AutoMapper.Collection.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/Castle.Core.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/FakeItEasy.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/FluentAssertions.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/Moq.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/xunit.abstractions.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/xunit.assert.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/xunit.core.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/xunit.execution.dotnet.dll

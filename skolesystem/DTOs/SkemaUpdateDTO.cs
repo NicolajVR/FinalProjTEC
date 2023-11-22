@@ -1,6 +1,6 @@
 ﻿namespace skolesystem.DTOs
 {
-    public class SkemaUpdateDto
+    public class ScheduleUpdateDto
     {
         public int schedule_id { get; set; }
 
