@@ -71,7 +71,6 @@ namespace skolesystem.Controllers
                     user_id = user.user_id,
                     surname = user.surname,
                     email = user.email,
-                    password_hash = user.password_hash,
                     is_deleted = user.is_deleted,
                     role_id = user.role_id
                 });
@@ -96,7 +95,6 @@ namespace skolesystem.Controllers
                 user_id = user.user_id,
                 surname = user.surname,
                 email = user.email,
-                password_hash = user.password_hash,
                 is_deleted = user.is_deleted,
                 role_id = user.role_id
             };
@@ -115,7 +113,6 @@ namespace skolesystem.Controllers
             try
             {
 
-                string salt = BCrypt.Net.BCrypt.GenerateSalt(12);
                 var user = new Users
             {
                 surname = userDto.surname,
@@ -130,18 +127,21 @@ namespace skolesystem.Controllers
 
             return CreatedAtAction(nameof(GetUserById), new { id = user.user_id }, userDto);
             }
+
             catch (Exception ex)
             {
                 // Log the exception or handle it as needed
                 return StatusCode(500, "An error occurred while processing the request.");
             }
 
+
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, UserUpdateDto userDto)
         {
-             await _usersService.UpdateUser(id, userDto);
+
+            await _usersService.UpdateUser(id, userDto);
             return Ok();
         }
 

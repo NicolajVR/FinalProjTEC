@@ -21,7 +21,8 @@ namespace skolesystem.Repository.UserSubmissionRepository
 
             if (deleteUserSubmission != null)
             {
-                _context.user_submission.Remove(deleteUserSubmission);
+                deleteUserSubmission.is_deleted = true;
+                _context.Entry(deleteUserSubmission).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
             return deleteUserSubmission;
@@ -80,6 +81,8 @@ namespace skolesystem.Repository.UserSubmissionRepository
                 _context.Entry(userToDelete).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
+
+
         }
 
 

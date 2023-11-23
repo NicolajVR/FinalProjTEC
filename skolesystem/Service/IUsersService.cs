@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Org.BouncyCastle.Crypto.Generators;
 using skolesystem.Authorization;
 using skolesystem.DTOs;
 using skolesystem.Models;
@@ -99,6 +98,8 @@ namespace skolesystem.Service
             {
                 return;
             }
+            userDto.password_hash = BCrypt.Net.BCrypt.HashPassword(userDto.password_hash);
+
 
             // Update the properties of existingUser based on userDto
             //existingUser.surname = userDto.surname;

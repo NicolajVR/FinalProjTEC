@@ -54,6 +54,7 @@ public class ScheduleRepository : IScheduleRepository
 
         // Map properties from DTO to the entity
         scheduleToUpdate.subject_id = scheduleDto.subject_id;
+        scheduleToUpdate.subject_name = scheduleDto.subject_name;
         scheduleToUpdate.day_of_week = scheduleDto.day_of_week;
         scheduleToUpdate.end_time = scheduleDto.end_time;
         scheduleToUpdate.class_id = scheduleDto.class_id;

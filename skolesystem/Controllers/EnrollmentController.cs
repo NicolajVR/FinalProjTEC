@@ -18,7 +18,7 @@ namespace skolesystem.Controllers
             _EnrollmentService = EnrollmentService;
         }
 
-        [Authorize(1,2) ]
+        [Authorize(1,2,3) ]
         [HttpGet("ByUser/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
