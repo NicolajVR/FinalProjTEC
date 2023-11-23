@@ -8,11 +8,9 @@ namespace skolesystem.DTOs.Assignment.Request
 	public class NewAssignment
 	{
         [Required]
-        [Range(1, int.MaxValue)]
         public int classeId { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue)]
         public int subjectId{ get; set; }
 
         [Required]

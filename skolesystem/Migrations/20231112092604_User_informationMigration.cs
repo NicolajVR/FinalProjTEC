@@ -36,7 +36,7 @@ namespace skolesystem.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bruger", x => x.user_information_id);
+                    table.PrimaryKey("PK_User_information", x => x.user_information_id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
         }

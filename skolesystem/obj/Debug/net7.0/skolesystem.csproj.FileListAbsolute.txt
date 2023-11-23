@@ -468,7 +468,5 @@ C:/Users/Frede/source/repos/admin-panel-web-api/skolesystem/bin/Debug/net7.0/Aut
 /Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/FakeItEasy.dll
 /Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/FluentAssertions.dll
 /Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/Moq.dll
-/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/xunit.abstractions.dll
-/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/xunit.assert.dll
-/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/xunit.core.dll
-/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/xunit.execution.dotnet.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/DevOne.Security.Cryptography.BCrypt.dll
+/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/bin/Debug/net7.0/BCrypt.Net-Next.dll

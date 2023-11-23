@@ -1,4 +1,6 @@
-﻿using skolesystem.Authorization;
+﻿using AutoMapper;
+using Org.BouncyCastle.Crypto.Generators;
+using skolesystem.Authorization;
 using skolesystem.DTOs;
 using skolesystem.Models;
 using skolesystem.Repository;
@@ -8,11 +10,11 @@ namespace skolesystem.Service
     //Service for business logic
     public interface IUsersService
     {
-        Task<Users> GetUserById(int id);
-        Task<IEnumerable<Users>> GetAllUsers();
-        Task<IEnumerable<Users>> GetDeletedUsers();
-        Task AddUser(Users user);
-        Task UpdateUser(Users user);
+        Task<UserReadDto> GetUserById(int id);
+        Task<IEnumerable<UserReadDto>> GetAllUsers();
+        Task<IEnumerable<UserReadDto>> GetDeletedUsers();
+        Task AddUser(UserCreateDto user);
+        Task UpdateUser(int id, UserUpdateDto user);
         Task SoftDeleteUser(int id);
         Task<LoginResponse> Authenticate(LoginRequest login);
     }
@@ -20,12 +22,15 @@ namespace skolesystem.Service
     {
         private readonly IUsersRepository _usersRepository;
         private readonly IJwtUtils _jwtUtils;
+        private readonly IMapper _mapper;
 
-        public UsersService(IUsersRepository usersRepository, IJwtUtils jwtUtils)
+        public UsersService(IUsersRepository usersRepository, IJwtUtils jwtUtils, IMapper mapper)
         {
             _usersRepository = usersRepository;
             _jwtUtils = jwtUtils;
+            _mapper = mapper;
         }
+
 
         public async Task<LoginResponse> Authenticate(LoginRequest login)
         {
@@ -35,8 +40,9 @@ namespace skolesystem.Service
                 return null;
             }
 
-            if (user.password_hash == login.password_hash)
+            if (BCrypt.Net.BCrypt.Verify(login.password_hash, user.password_hash))
             {
+
                 LoginResponse response = new()
                 {
                     user_id = user.user_id,
@@ -46,37 +52,62 @@ namespace skolesystem.Service
                     is_deleted = user.is_deleted,
                     Token = _jwtUtils.GenerateJwtToken(user)
                 };
-                return response;
+
+                
+
+                    return response;
             }
+
+
 
             return null;
         }
 
 
 
-        public async Task<Users> GetUserById(int id)
+        public async Task<UserReadDto> GetUserById(int id)
         {
-            return await _usersRepository.GetById(id);
+            var user = await _usersRepository.GetById(id);
+            return _mapper.Map<UserReadDto>(user);
         }
 
-        public async Task<IEnumerable<Users>> GetAllUsers()
+        public async Task<IEnumerable<UserReadDto>> GetAllUsers()
         {
-            return await _usersRepository.GetAll();
+            var users = await _usersRepository.GetAll();
+            return _mapper.Map<IEnumerable<UserReadDto>>(users);
         }
 
-        public async Task<IEnumerable<Users>> GetDeletedUsers()
+        public async Task<IEnumerable<UserReadDto>> GetDeletedUsers()
         {
-            return await _usersRepository.GetDeletedUsers();
+            var deletedUsers = await _usersRepository.GetDeletedUsers();
+            return _mapper.Map<IEnumerable<UserReadDto>>(deletedUsers);
         }
 
-        public async Task AddUser(Users user)
+        public async Task AddUser(UserCreateDto user)
         {
-            await _usersRepository.AddUser(user);
+
+
+            var userEntity = _mapper.Map<Users>(user);
+            await _usersRepository.AddUser(userEntity);
         }
 
-        public async Task UpdateUser(Users user)
+        public async Task UpdateUser(int id, UserUpdateDto userDto)
         {
-            await _usersRepository.UpdateUser(user);
+            var existingUser = await _usersRepository.GetById(id);
+
+            if (existingUser == null)
+            {
+                return;
+            }
+
+            // Update the properties of existingUser based on userDto
+            //existingUser.surname = userDto.surname;
+            //existingUser.email = userDto.email;
+            _mapper.Map(userDto, existingUser);
+
+
+            // Save the changes
+            await _usersRepository.UpdateUser(existingUser);
         }
 
         public async Task SoftDeleteUser(int id)

@@ -13,14 +13,13 @@ namespace skolesystem.Controllers
     public class User_informationController : ControllerBase
     {
         private readonly IUser_informationService _User_informationService;
-        private readonly User_informationDbContext _Context;
 
-        public User_informationController(IUser_informationService user_informationService, User_informationDbContext context)
+        public User_informationController(IUser_informationService user_informationService)
         {
             _User_informationService = user_informationService;
-            _Context = context;
 
         }
+
 
         [HttpGet]
         public async Task<IEnumerable<User_informationReadDto>> Get()
@@ -47,12 +46,13 @@ namespace skolesystem.Controllers
 
 
         //[Authorize(2)]
-        [HttpGet("students")]
-        public async Task<IEnumerable<User_information>> GetAllStudents()
-        {
-            return await _Context.User_information.Where(b => b.is_deleted == false && b.user_id == 3).ToListAsync();
+        //[HttpGet("students")]
+        //public async Task<IEnumerable<User_information>> GetAllStudents()
+        //{
+        //    return await _Context.User_information.Where(b => b.is_deleted == false && b.user_id == 3).ToListAsync();
 
-        }
+        //}
+
 
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(User_informationReadDto), StatusCodes.Status200OK)]
@@ -121,17 +121,22 @@ namespace skolesystem.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser_information(int id, User_informationUpdateDto User_informationDto)
         {
+            try
+            {
                 var existingUser_information = await _User_informationService.GetUser_informationById(id);
 
                 if (existingUser_information == null)
                 {
-                    return NotFound();
+                    throw new NotFoundException("User_information not found");
                 }
 
                 await _User_informationService.UpdateUser_information(id, User_informationDto);
                 return NoContent();
-
-
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
         }
 
 
@@ -144,12 +149,27 @@ namespace skolesystem.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser_information(int id)
         {
-
+            try
+            {
                 await _User_informationService.SoftDeleteUser_information(id);
                 return NoContent();
-
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
 
         }
+
+
+
+
+
+
+
+
+
+
 
 
     }

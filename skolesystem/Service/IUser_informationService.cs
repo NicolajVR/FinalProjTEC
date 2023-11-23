@@ -75,10 +75,10 @@ public class User_informationService : IUser_informationService
     {
         var existingUser_information = await _user_informationRepository.GetById(id);
 
-        //if (existingUser_information == null)
-        //{
-        //    throw new NotFoundException("User_information not found");
-        // }
+        if (existingUser_information == null)
+        {
+            throw new NotFoundException("User_information not found");
+         }
 
         // Continue with the update logic
         _mapper.Map(user_informationDto, existingUser_information);
@@ -92,10 +92,10 @@ public class User_informationService : IUser_informationService
     {
         var existingUser_information = await _user_informationRepository.GetById(id);
 
-        //if (existingUser_information == null)
-        //{
-        //    throw new NotFoundException("User_information not found");
-        //}
+        if (existingUser_information == null)
+        {
+            throw new NotFoundException("User_information not found");
+        }
 
 
         await _user_informationRepository.SoftDeleteUser_information(id);

@@ -9,7 +9,7 @@ namespace skolesystem.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class ClasseController : ControllerBase
-	{
+    {
         private readonly IClasseService _ClasseService;
 
         public ClasseController(IClasseService ClasseService)
@@ -118,28 +118,6 @@ namespace skolesystem.Controllers
                 return Problem(exp.Message);
             }
         }
-        [HttpDelete("{Id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete([FromRoute] int Id)
-        {
-            try
-            {
-                bool result = await _ClasseService.Delete(Id);
 
-                if (!result)
-                {
-                    return Problem("Could not be deleted");
-                }
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return Problem(ex.Message);
-            }
-        }
     }
 }
-

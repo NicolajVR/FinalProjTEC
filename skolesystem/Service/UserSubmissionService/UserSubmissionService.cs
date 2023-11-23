@@ -140,19 +140,6 @@ namespace skolesystem.Service.UserSubmissionService
                 userSubmission_text = UserSubmission.submission_text,
                 userSubmission_date = UserSubmission.submission_date,
                 is_deleted = UserSubmission.is_deleted,
-                userSubmissionAssignmentResponse = new UserSubmissionAssignmentResponse
-                {
-                    opgave_Id = UserSubmission.Assignment.assignment_id,
-                    opgave_Description = UserSubmission.Assignment.assignment_description,
-                    opgave_Deadline = UserSubmission.Assignment.assignment_deadline,
-                    is_Deleted = UserSubmission.Assignment.is_Deleted,
-                },
-                userSubmissionUserResponse = new UserSubmissionUserResponse
-                {
-                    user_id = UserSubmission.User.user_id,
-                    surname = UserSubmission.User.surname,
-                    email = UserSubmission.User.email
-                }
             };
         }
 
@@ -172,21 +159,7 @@ namespace skolesystem.Service.UserSubmissionService
                 await _AssignmentRepository.SelectAssignmentById(UserSubmission.submission_id);
                 return UserSubmission == null ? null : new UserSubmissionResponse
                 {
-                    userSubmission_text = UserSubmission.submission_text,
-                    userSubmission_date = UserSubmission.submission_date,
-                    userSubmissionAssignmentResponse = new UserSubmissionAssignmentResponse
-                    {
-                        opgave_Id = UserSubmission.Assignment.assignment_id,
-                        opgave_Description = UserSubmission.Assignment.assignment_description,
-                        opgave_Deadline = UserSubmission.Assignment.assignment_deadline,
-                        is_Deleted = UserSubmission.Assignment.is_Deleted,
-                    },
-                    userSubmissionUserResponse = new UserSubmissionUserResponse
-                    {
-                        user_id = UserSubmission.User.user_id,
-                        surname = UserSubmission.User.surname,
-                        email = UserSubmission.User.email
-                    }
+                   
                 };
             }
         }

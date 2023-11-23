@@ -1,4 +1,5 @@
 ﻿using System;
+using FakeItEasy;
 using skolesystem.DTOs.Assignment.Request;
 using skolesystem.DTOs.Assignment.Response;
 using skolesystem.Models;
@@ -17,7 +18,7 @@ namespace skolesystem.Service.AssignmentService
             _assignmentRepository = AssignmentListRepository;
             _ClasseRepository = userRepository;
         }
-        public async Task<List<AssignmentResponse>> GetAll()
+        public async Task<List<AssignmentResponse?>> GetAll()
         {
             List<Assignment> Assignment = await _assignmentRepository.SelectAllAssignment();
 
@@ -40,7 +41,7 @@ namespace skolesystem.Service.AssignmentService
 
             }).ToList();
         }
-        public async Task<AssignmentResponse> GetById(int AssignmentId)
+        public async Task<AssignmentResponse?> GetById(int AssignmentId)
         {
             Assignment Assignment = await _assignmentRepository.SelectAssignmentById(AssignmentId);
             return Assignment == null ? null : new AssignmentResponse
@@ -52,10 +53,11 @@ namespace skolesystem.Service.AssignmentService
                 {
                     class_id = Assignment.Classe.class_id,
                     class_name = Assignment.Classe.class_name
-                }
+                },
+
             };
         }
-        public async Task<AssignmentResponse> Create(NewAssignment newAssignment)
+        public async Task<AssignmentResponse?> Create(NewAssignment newAssignment)
         {
             Assignment assignment = new Assignment
             {
@@ -63,6 +65,7 @@ namespace skolesystem.Service.AssignmentService
                 subject_id = newAssignment.subjectId,
                 assignment_deadline = newAssignment.assignment_Deadline,
                 assignment_description = newAssignment.assignment_Description
+
             };
 
             assignment = await _assignmentRepository.InsertNewAssignment(assignment);
@@ -71,12 +74,17 @@ namespace skolesystem.Service.AssignmentService
             {
                 assignment_id = assignment.assignment_id,
                 assignment_deadline = assignment.assignment_deadline,
-                assignment_description = assignment.assignment_description
+                assignment_description = assignment.assignment_description,
+
+
+
+
+
 
             };
         }
 
-        public async Task<AssignmentResponse> Update(int AssignmentId, UpdateAssignment updateAssignment)
+        public async Task<AssignmentResponse?> Update(int AssignmentId, UpdateAssignment updateAssignment)
         {
             Assignment assignment = new Assignment
             {

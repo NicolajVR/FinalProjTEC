@@ -18,7 +18,7 @@ namespace skolesystem.Migrations
                 .HasAnnotation("ProductVersion", "7.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("skolesystem.Models.Bruger", b =>
+            modelBuilder.Entity("skolesystem.Models.User_information", b =>
                 {
                     b.Property<int>("user_information_id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +60,7 @@ namespace skolesystem.Migrations
 
                     b.HasKey("user_information_id");
 
-                    b.ToTable("Bruger");
+                    b.ToTable("User_information");
                 });
 #pragma warning restore 612, 618
         }

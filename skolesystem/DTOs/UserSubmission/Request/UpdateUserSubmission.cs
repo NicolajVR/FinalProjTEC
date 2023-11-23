@@ -6,7 +6,6 @@ namespace skolesystem.DTOs.UserSubmission.Request
 	public class UpdateUserSubmission
 	{
         [Required]
-        [Range(1, int.MaxValue)]
         public int submissionId { get; set; }
 
         [Required]

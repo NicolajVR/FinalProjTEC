@@ -99,18 +99,7 @@ namespace skolesystem.Service.EnrollmentService
 
             return Enrollment == null ? null : new EnrollmentResponse
             {
-                enrollmentClassResponse = new EnrollmentClassResponse
-                {
-                    Id = Enrollment.Classe.class_id,
-                    className = Enrollment.Classe.class_name,
-                    location = Enrollment.Classe.location
-                },
-                enrollmentUserResponse = new EnrollmentUserResponse
-                {
-                    user_id = Enrollment.User.user_id,
-                    surname = Enrollment.User.surname,
-                    email = Enrollment.User.email
-                }
+              
             };
         }
 
@@ -132,14 +121,6 @@ namespace skolesystem.Service.EnrollmentService
                 return Enrollment == null ? null : new EnrollmentResponse
                 {
 
-                    enrollmentClassResponse = new EnrollmentClassResponse
-                    {
-                        Id = Enrollment.Classe.class_id,
-                    },
-                    enrollmentUserResponse = new EnrollmentUserResponse
-                    {
-                        user_id = Enrollment.User.user_id,
-                    }
                 };
             }
         }
