@@ -1,5 +1,5 @@
 export async function getSchedule() {
-  const response = await fetch("https://localhost:7136/api/Skema");
+  const response = await fetch("https://localhost:7136/api/Schedule");
 
   if (!response.ok) {
     throw new Error("failed to fetch users");
@@ -10,7 +10,7 @@ export async function getSchedule() {
 
 export async function createSchedule(schedule: any) {
   try {
-    const response = await fetch("https://localhost:7136/api/Skema", {
+    const response = await fetch("https://localhost:7136/api/Schedule", {
       method: "POST",
       body: JSON.stringify(schedule),
       headers: {
@@ -29,7 +29,7 @@ export async function createSchedule(schedule: any) {
 
 export async function deleteSchedule(id: number) {
   try {
-    const response = await fetch("https://localhost:7136/api/Skema/" + id, {
+    const response = await fetch("https://localhost:7136/api/Schedule/" + id, {
       method: "DELETE",
     });
     console.log(response);
@@ -44,7 +44,7 @@ export async function deleteSchedule(id: number) {
 
 export async function updateSchedule(schedule: any, id: number) {
   try {
-    const response = await fetch("https://localhost:7136/api/Skema/" + id, {
+    const response = await fetch("https://localhost:7136/api/Schedule/" + id, {
       method: "PUT",
       body: JSON.stringify(schedule),
       headers: {
@@ -63,9 +63,9 @@ export async function updateSchedule(schedule: any, id: number) {
 
 export async function getScheduleById(id: number) {
     try {
-      const response = await fetch("https://localhost:7136/api/Skema/" + id,);
+      const response = await fetch("https://localhost:7136/api/Schedule/" + id,);
       console.log(response);
-      
+
       if (!response.ok) {
         throw new Error("Failed to create user");
       }

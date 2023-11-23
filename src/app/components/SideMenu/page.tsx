@@ -14,7 +14,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import scss from "./SideMenu.module.scss";
 import TaskIcon from '@mui/icons-material/Task';
 import PostAddIcon from '@mui/icons-material/PostAdd';
-import SchoolIcon from '@mui/icons-material/School';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
 
 import {
   Divider,
@@ -70,7 +70,7 @@ if (session?.user.role_id == 1)
 {
   menuRouteList = ["calendar","data", "profile", "settings", ""];
 
-  menuListTranslations = ["calendar","Data","school", "Profile", "Settings", "Sign Out"];
+  menuListTranslations = ["calendar","Data", "Profile", "Settings", "Sign Out"];
   
   menuListIcons = [
 <CalendarMonthIcon/>,
@@ -84,12 +84,13 @@ if (session?.user.role_id == 1)
 
 if (session?.user.role_id == 2)
 {
-  menuRouteList = ["calendar","opgave","submited","profile", ""];
+  menuRouteList = ["calendar","absence","opgave","submited","profile", ""];
 
-  menuListTranslations = ["calendar","opgave", "Submited", "Profile", "Sign Out"];
+  menuListTranslations = ["calendar","Absence","opgave", "Submited", "Profile", "Sign Out"];
   
   menuListIcons = [
 <CalendarMonthIcon/>,
+<PendingActionsIcon/>,
 <PostAddIcon/>,
 <TaskIcon/>,
   <Person2Icon />,
@@ -152,7 +153,7 @@ if (session?.user.role_id == 2)
           <ListItem key={text} disablePadding sx={{ display: "block" }}>
             <NextLink
               className={scss.link}
-              href={`/dashboard/${menuRouteList[index]}`}
+              href={`/pages/${menuRouteList[index]}`}
             >
               <ListItemButton
                 onClick={() => handleListItemButtonClick(text)}

@@ -119,6 +119,7 @@ const Profile =  () => {
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+
     const user = await getUserById(session?.user.user_id as number);
     const profile = await getProfileById(session?.user.user_id as number);
 
@@ -144,7 +145,9 @@ const Profile =  () => {
       user_id: profile.user_id,
     };
 
-    if(formData.confirmPassword == userData.password_hash)
+
+    
+    if(formData.confirmPassword == "CONFIRM")
     {
       updateUser(userData,user.user_id);
       updateProfile(profileData,profile.user_information_id);
@@ -162,8 +165,7 @@ const Profile =  () => {
     <>
       <Box>
         <Typography variant={"h4"} sx={{ paddingBottom: 4 }}>
-          Hey {session ? session?.user?.surname : "User"}, welcome to your profile
-          👋
+        Hey <strong>{ formData.firstName }</strong>, welcome to your profile 👋
         </Typography>
         <Paper sx={{ padding: "1rem 2rem" }}>
           <Grid container justifyContent="center">
@@ -244,7 +246,7 @@ const Profile =  () => {
                       required
                       fullWidth
                       type="password"
-                      label="Confirm changes with your password"
+                      label="Type CONFIRM"
                       name="confirmPassword"
                       value={formData.confirmPassword}
                       onChange={handleFormChange}
@@ -263,7 +265,7 @@ const Profile =  () => {
       </Box>
       <Snackbar open={openError} autoHideDuration={6000} onClose={handleCloseError}>
         <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
-          Password dosen't match 
+          Didn't write confirm 
         </Alert>
       </Snackbar>
       <Snackbar open={openSuccess} autoHideDuration={6000} onClose={handleCloseSuccess}>

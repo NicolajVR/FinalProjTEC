@@ -11,7 +11,7 @@ const Layout = (props: any) => {
   return (
     <>
       <Head>
-        <title>School Dashboard</title>
+        <title>School</title>
         <meta name="description" content="Data Dashboard" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

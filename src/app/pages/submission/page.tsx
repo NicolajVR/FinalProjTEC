@@ -287,7 +287,6 @@ export default function FullFeaturedCrudGrid() {
     const seconds = currentDate.getSeconds();
 
     const submissionData = {
-      submissionId: 2147483647,
       userSubmission_text: answer,
       userSubmission_date: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`,
       userId: session?.user.role_id,
@@ -382,6 +381,7 @@ export default function FullFeaturedCrudGrid() {
 
         const submissions = await getSubmissions(session?.user.token);
 
+
         // Filter submissions for opgave_Id where user_id is given
         const opgaveIdsForUser = submissions
           .filter(
@@ -394,7 +394,9 @@ export default function FullFeaturedCrudGrid() {
               submission.userSubmissionAssignmentResponse.opgave_Id
           );
 
-        console.log("the ids:", opgaveIdsForUser); // Array of opgave_Id values belonging to user_id 1
+
+
+        console.log("the ids:", session?.user.user_id); // Array of opgave_Id values belonging to user_id 1
 
         const assignment_c_s = await assignments.filter(
           (item: any) =>
@@ -403,6 +405,7 @@ export default function FullFeaturedCrudGrid() {
             item.is_deleted == false &&
             opgaveIdsForUser.includes(item.assignment_id)
         );
+
 
         console.log("FINAL: ", assignment_c_s);
 

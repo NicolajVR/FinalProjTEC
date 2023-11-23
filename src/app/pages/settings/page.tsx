@@ -195,7 +195,6 @@ export default function FullFeaturedCrudGrid() {
           user_id: any;
           surname: any;
           email: any;
-          password_hash: any;
           is_deleted: any;
           role: any;
         }) => {
@@ -204,7 +203,7 @@ export default function FullFeaturedCrudGrid() {
               id: user.user_id,
               surname: user.surname,
               email: user.email,
-              password_hash: user.password_hash,
+              password_hash: "",
               is_deleted: user.is_deleted,
               role: user.role_id,
             }))
@@ -457,7 +456,10 @@ export default function FullFeaturedCrudGrid() {
     },
     {
       field: "password_hash",
-      headerName: "Hash",
+      renderCell: (params) => (
+        <span>{'*'.repeat(params.value.toString().length)}</span>
+      ),
+      headerName: "Password",
       width: 180,
       editable: true,
     },
@@ -568,6 +570,7 @@ export default function FullFeaturedCrudGrid() {
       >
         Remove from Class
       </Button>
+      
       <Box
         sx={{
           height: 500,

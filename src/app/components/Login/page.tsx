@@ -20,7 +20,7 @@ const StyledButton = styled(Button)``;
 
 
     if(session) {
-        return redirect("/dashboard/calendar");
+        return redirect("/pages/calendar");
         
     }
     return <>

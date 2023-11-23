@@ -24,6 +24,7 @@
         body: JSON.stringify(user),
         headers: {
             Authorization: 'Bearer ' + token,
+            "content-type": "application/json",
         },
       });
       console.log(response);

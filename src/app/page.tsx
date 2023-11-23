@@ -2,9 +2,8 @@
 import { useSession } from "next-auth/react"
 import scss from './Home.module.scss'
 import React from "react";
-import Dashboard from "./dashboard/page";
 import SignIn from "./auth/signin/page";
-import Calendar from "./dashboard/calendar/page"
+import Calendar from "./pages/calendar/page"
 
 const  Home: React.FC =() => {
   const {data: session, status} = useSession();
