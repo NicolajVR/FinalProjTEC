@@ -23,6 +23,7 @@ export async function createClass(absence: any) {
         throw new Error("Failed to create absence");
       }
       return await response.json();
+      
     } catch (error) {
       console.log(error);
     }

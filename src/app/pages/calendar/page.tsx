@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from "react";
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
-  const checkin = !!session;
+  let checkin = true;
 
   // Use state to manage when to render the component
   const [isReady, setIsReady] = useState(false);
@@ -33,11 +33,23 @@ const Dashboard = () => {
         setIsReady(true);
         const schedules = await getSchedule();
         console.log(schedules);
+
+
+        if (session.user.role_id == 3)
+        {
+
+          checkin = false;
+
+        }
+
+
         let events = schedules.map((schedule: any) => ({
           event_id: schedule.schedule_id,
           title: schedule.subject_name,
           start: new Date(schedule.start_time),
           end: new Date(schedule.end_time),
+          editable: checkin,
+          deletable: checkin
         }));
 
         console.log("test: ", events);
@@ -86,6 +98,8 @@ const Dashboard = () => {
     ];
     const currentDayName = daysOfWeek[currentDayOfWeek];
 
+
+
     const userData = {
       subject_id: 1,
       day_of_week: currentDayName,
@@ -106,6 +120,7 @@ const Dashboard = () => {
         day_of_week: updateData.day_of_week,
         subject_name: event.title,
         start_time: event.start,
+
         end_time: event.end,
       };
 
@@ -114,7 +129,9 @@ const Dashboard = () => {
       updateSchedule(newData, event.event_id as number);
     } else if (action === "create") {
 
-      await createSchedule(userData)
+      if (session?.user.role_id == 1 || 2 )
+      {
+      await createSchedule(userData, session?.user.token)
 
       const schedules: any[] = await getSchedule();
 
@@ -125,6 +142,8 @@ const Dashboard = () => {
         // lastEventId as needed
         console.log("Last Event ID:", lastEventId);
       }
+
+    }
 
 
     }

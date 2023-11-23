@@ -8,13 +8,14 @@ export async function getSchedule() {
   return await response.json();
 }
 
-export async function createSchedule(schedule: any) {
+export async function createSchedule(schedule: any, token: any) {
   try {
     const response = await fetch("https://localhost:7136/api/Schedule", {
       method: "POST",
       body: JSON.stringify(schedule),
       headers: {
         "content-type": "application/json",
+            Authorization: 'Bearer ' + token,
       },
     });
     console.log(response);
