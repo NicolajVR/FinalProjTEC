@@ -160,7 +160,6 @@ namespace skolesystem.Controllers
                     user_id = user.user_id,
                     surname = user.surname,
                     email = user.email,
-                    password_hash = user.password_hash,
                     is_deleted = user.is_deleted,
                     role_id = user.role_id
                 });
@@ -222,7 +221,6 @@ namespace skolesystem.Controllers
                 user_id = user.user_id,
                 surname = user.surname,
                 email = user.email,
-                password_hash = user.password_hash,
                 is_deleted = user.is_deleted,
                 role_id = user.role_id
             };
