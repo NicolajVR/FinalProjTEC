@@ -80,13 +80,7 @@ namespace skolesystem.Controllers
             };
 
             return Ok(User_informationDto);
-
-
         }
-
-
-
-
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -107,16 +101,7 @@ namespace skolesystem.Controllers
                 // User with the specified ID already exists
                 return Conflict(ex.Message);
             }
-
-
-
-
-
-
-
-
         }
-
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser_information(int id, User_informationUpdateDto User_informationDto)
@@ -139,11 +124,6 @@ namespace skolesystem.Controllers
             }
         }
 
-
-
-
-
-
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -160,17 +140,5 @@ namespace skolesystem.Controllers
             }
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
