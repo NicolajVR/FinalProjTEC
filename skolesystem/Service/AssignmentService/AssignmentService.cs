@@ -20,6 +20,7 @@ namespace skolesystem.Service.AssignmentService
         }
         public async Task<List<AssignmentResponse?>> GetAll()
         {
+            // Kald repository-metode for at hente alle assignments,fra databasen
             List<Assignment> Assignment = await _assignmentRepository.SelectAllAssignment();
 
             return Assignment.Select(a => new AssignmentResponse
@@ -43,6 +44,7 @@ namespace skolesystem.Service.AssignmentService
         }
         public async Task<AssignmentResponse?> GetById(int AssignmentId)
         {
+            // Kald repository-metode for at hente et specifikt assignments,fra databasen
             Assignment Assignment = await _assignmentRepository.SelectAssignmentById(AssignmentId);
             return Assignment == null ? null : new AssignmentResponse
             {
@@ -59,6 +61,7 @@ namespace skolesystem.Service.AssignmentService
         }
         public async Task<AssignmentResponse?> Create(NewAssignment newAssignment)
         {
+            // Opret et nyt assignment-objekt ved hjælp af værdier fra Newassignment
             Assignment assignment = new Assignment
             {
                 class_id = newAssignment.classeId,
@@ -67,7 +70,7 @@ namespace skolesystem.Service.AssignmentService
                 assignment_description = newAssignment.assignment_Description
 
             };
-
+            // Indsæt den nye assignment i repository 
             assignment = await _assignmentRepository.InsertNewAssignment(assignment);
 
             return assignment == null ? null : new AssignmentResponse
@@ -86,13 +89,14 @@ namespace skolesystem.Service.AssignmentService
 
         public async Task<AssignmentResponse?> Update(int AssignmentId, UpdateAssignment updateAssignment)
         {
+            // Opret et nyt assignment-objekt med opdaterede oplysninger
             Assignment assignment = new Assignment
             {
                 assignment_deadline = updateAssignment.assignment_Deadline,
                 assignment_description = updateAssignment.assignment_Description,
                 // UserIdxxx = updateAssignment.UserId,
             };
-
+            // Opdater den eksisterende assignment i repository'en asynkront
             assignment = await _assignmentRepository.UpdateExistingAssignment(AssignmentId, assignment);
 
             return assignment == null ? null : new AssignmentResponse
@@ -104,7 +108,9 @@ namespace skolesystem.Service.AssignmentService
         }
         public async Task<bool> Delete(int assignmentId)
         {
+            // Anmod om sletning af assignment fra repository
             var result = await _assignmentRepository.DeleteAssignment(assignmentId);
+            // Returner true, hvis sletningen var vellykket
             return (result != null);
         }
     }

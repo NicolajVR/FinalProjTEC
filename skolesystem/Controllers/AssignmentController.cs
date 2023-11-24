@@ -26,18 +26,19 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at hente alle assignments
                 List<AssignmentResponse> AssignmentList = await _AssignmentService.GetAll();
-
+                // Håndter tilfælde, hvor der ikke er nogen data
                 if (AssignmentList == null)
                 {
                     return Problem("Got no data, not even an empty list, this is unexpected");
                 }
-
+                // Håndter tilfælde, hvor der er en tom liste
                 if (AssignmentList.Count == 0)
                 {
                     return NoContent();
                 }
-
+                // Returner HTTP-statuskode 200 OK med assignments som svar
                 return Ok(AssignmentList);
             }
             catch (Exception ex)
@@ -46,7 +47,7 @@ namespace skolesystem.Controllers
             }
         }
 
-        [Authorize(2)]
+        [Authorize(2)]// Autoriser kun brugere med roller 2(lærer)
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -56,13 +57,14 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at hente alle assignments
                 AssignmentResponse Assignments = await _AssignmentService.GetById(id);
-
+                // Håndter tilfælde, hvor der ikke er nogen data
                 if (Assignments == null)
                 {
                     return NotFound();
                 }
-
+                // Returner HTTP-statuskode 200 OK med assignments som svar
                 return Ok(Assignments);
             }
             catch (Exception ex)
@@ -71,7 +73,7 @@ namespace skolesystem.Controllers
             }
         }
 
-        [Authorize(2)]
+        [Authorize(2)]// Autoriser kun brugere med roller 2(lærer)
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -80,6 +82,7 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at oprette en ny assignment
                 AssignmentResponse Assignments = await _AssignmentService.Create(newAssignment);
 
                 if (Assignments == null)
@@ -95,15 +98,17 @@ namespace skolesystem.Controllers
             }
         }
 
-        [Authorize(2)]
+        [Authorize(2)]// Autoriser kun brugere med roller 2(lærer)
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAssignment updateAssignment)
+        public async Task<IActionResult> Update([FromRoute] int id/*modtager id fra frontend*/,
+            [FromBody] UpdateAssignment updateAssignment/*modtager data*/)
         {
             try
             {
+                // Kald service-metode for at opdatere en eksisterende assignment
                 AssignmentResponse Assignments = await _AssignmentService.Update(id, updateAssignment);
 
                 if (Assignments == null)
@@ -119,7 +124,7 @@ namespace skolesystem.Controllers
             }
         }
 
-        [Authorize(2)]
+        [Authorize(2)]// Autoriser kun brugere med roller 2(lærer)
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -128,6 +133,7 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at slette en assignment baseret på id
                 bool result = await _AssignmentService.Delete(id);
 
                 if (!result)

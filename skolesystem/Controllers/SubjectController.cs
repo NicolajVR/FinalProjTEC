@@ -25,17 +25,20 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at hente alle subject
                 List<SubjectResponse> SubjectResponses =
                     await _subjectService.GetAll();
-
+                // Håndter tilfælde, hvor der ikke er nogen data
                 if (SubjectResponses == null)
                 {
                     return Problem("Nothing...");
                 }
+                // Håndter tilfælde, hvor der er en tom liste
                 if (SubjectResponses.Count == 0)
                 {
                     return NoContent();
                 }
+                // Returner HTTP-statuskode 200 OK med subject som svar
                 return Ok(SubjectResponses);
             }
             catch (Exception exp)
@@ -52,9 +55,10 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at hente en subject
                 SubjectResponse SubjectResponse =
                     await _subjectService.GetById(Id);
-
+                // Håndter tilfælde, hvor subject ikke er fundet
                 if (SubjectResponse == null)
                 {
                     return Problem("Nothing...");
@@ -76,6 +80,7 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at oprette en ny subject
                 SubjectResponse SubjectResponse =
                     await _subjectService.Create(newSubject);
 
@@ -97,11 +102,12 @@ namespace skolesystem.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromRoute] int Id,
-        [FromBody] UpdateSubject updateSubject)
+        public async Task<IActionResult> Update([FromRoute] int Id/*modtager id fra frontend*/,
+        [FromBody] UpdateSubject updateSubject/*modtager data*/)
         {
             try
             {
+                // Kald service-metode for at opdatere en eksisterende subject
                 SubjectResponse SubjectResponse =
                     await _subjectService.Update(Id, updateSubject);
 

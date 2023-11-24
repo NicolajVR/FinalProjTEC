@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Intrinsics.X86;
 using Microsoft.AspNetCore.Mvc;
 using skolesystem.Authorization;
 using skolesystem.DTOs.Enrollment.Request;
@@ -18,7 +19,7 @@ namespace skolesystem.Controllers
             _EnrollmentService = EnrollmentService;
         }
 
-        [Authorize(1,2,3) ]
+        [Authorize(1,2,3)]// Autoriser kun brugere med roller 1(admin) 2(lærer) eller 3(elev)
         [HttpGet("ByUser/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -27,18 +28,19 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at hente alle enrollments
                 List<EnrollmentResponse> Enrollments = await _EnrollmentService.GetAllEnrollmentsByUser(id);
-
+                // Håndter tilfælde, hvor der ikke er nogen data
                 if (Enrollments == null)
                 {
                     return Problem("Got no data, not even an empty list, this is unexpected");
                 }
-
+                // Håndter tilfælde, hvor der er en tom liste
                 if (Enrollments.Count == 0)
                 {
                     return NoContent();
                 }
-
+                // Returner HTTP-statuskode 200 OK med enrollments som svar
                 return Ok(Enrollments);
 
             }
@@ -47,7 +49,7 @@ namespace skolesystem.Controllers
                 return Problem(ex.Message);
             }
         }
-        [Authorize(1,2,3)]
+        [Authorize(1,2,3)]// Autoriser kun brugere med roller 1(admin) 2(lærer) eller 3(elev)
         [HttpGet("ByClass/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -87,8 +89,9 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at hente en enrollment
                 EnrollmentResponse Enrollments = await _EnrollmentService.GetById(id);
-
+                // Håndter tilfælde, hvor enrollment ikke er fundet
                 if (Enrollments == null)
                 {
                     return NotFound();
@@ -110,6 +113,7 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at oprette en ny enrollment
                 EnrollmentResponse Enrollments = await _EnrollmentService.Create(newEnrollment);
 
                 if (Enrollments == null)
@@ -129,10 +133,12 @@ namespace skolesystem.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateEnrollment updateEnrollment)
+        public async Task<IActionResult> Update([FromRoute] int id/*modtager id fra frontend*/
+            , [FromBody] UpdateEnrollment updateEnrollment/*modtager data*/)
         {
             try
             {
+                // Kald service-metode for at opdatere en eksisterende enrollment
                 EnrollmentResponse Enrollments = await _EnrollmentService.Update(id, updateEnrollment);
 
                 if (Enrollments == null)
@@ -147,7 +153,7 @@ namespace skolesystem.Controllers
                 return Problem(ex.Message);
             }
         }
-        [Authorize(1)]
+        [Authorize(1)]// Autoriser kun brugere med roller 1(admin)
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -156,6 +162,7 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at slette en enrollment baseret på id
                 bool result = await _EnrollmentService.Delete(id);
 
                 if (!result)

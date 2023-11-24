@@ -16,9 +16,10 @@ namespace skolesystem.Repository.UserSubmissionRepository
 
         public async Task<UserSubmission> DeleteUserSubmission(int UserSubmissionId)
         {
+            // Find Usersubmission i databasen baseret på UserSubmissionId
             UserSubmission deleteUserSubmission = await _context.user_submission
                 .FirstOrDefaultAsync(UserSubmission => UserSubmission.submission_id == UserSubmissionId);
-
+            // Hvis Usersubmission findes, marker den som slettet og gem ændringerne i databasen
             if (deleteUserSubmission != null)
             {
                 deleteUserSubmission.is_deleted = true;
@@ -30,28 +31,24 @@ namespace skolesystem.Repository.UserSubmissionRepository
 
         public async Task<UserSubmission> InsertNewUserSubmission(UserSubmission UserSubmission)
         {
+            // Tilføj den nye Usersubmission til konteksten
             _context.user_submission.Add(UserSubmission);
+            // Gem ændringerne i databasen
             await _context.SaveChangesAsync();
             return UserSubmission;
         }
 
         public async Task<List<UserSubmission>> SelectAllUserSubmissions()
         {
+            // Hent alle Usersubmissioner fra databasen inklusiv hvem der har afleveret
             return await _context.user_submission.Include(a => a.Assignment).Include(u => u.User).ToListAsync();
         }
 
-        public async Task<List<UserSubmission>> GetAllUserSubmissionsByAssignment(int assignmentId)
-        {
-            return await _context.user_submission.Where(a => a.submission_id == assignmentId).Include(a => a.Assignment).Include(a => a.User).ToListAsync();
-        }
-
-        public async Task<List<UserSubmission>> GetUserSubmissionsByUsers(int usersId)
-        {
-            return await _context.user_submission.Where(a => a.submission_id == usersId).Include(a => a.User).Include(a => a.Assignment).ToListAsync();
-        }
+        
 
         public async Task<UserSubmission> SelectUserSubmissionById(int UserSubmissionId)
         {
+            // Hent en enkelt Usersubmission fra databasen baseret på UserSubmissionId
             return await _context.user_submission
                 .Include(p => p.Assignment).Include(a => a.User)
                 .FirstOrDefaultAsync(a => a.submission_id == UserSubmissionId);
@@ -59,8 +56,10 @@ namespace skolesystem.Repository.UserSubmissionRepository
 
         public async Task<UserSubmission> UpdateExistingUserSubmission(int UserSubmissionId, UserSubmission UserSubmission)
         {
+            // Find den eksisterende Usersubmission i databasen baseret på UserSubmissionId
             UserSubmission updateUserSubmission = await _context.user_submission
                 .FirstOrDefaultAsync(UserSubmission => UserSubmission.submission_id == UserSubmissionId);
+            // Hvis Usersubmission findes, opdater dens attributter og gem ændringerne i databasen
             if (updateUserSubmission != null)
             {
                 updateUserSubmission.submission_text = UserSubmission.submission_text;
@@ -68,21 +67,6 @@ namespace skolesystem.Repository.UserSubmissionRepository
                 await _context.SaveChangesAsync();
             }
             return updateUserSubmission;
-        }
-
-
-        public async Task SoftDeleteUserSubmission(int id)
-        {
-            var userToDelete = await _context.user_submission.FindAsync(id);
-
-            if (userToDelete != null)
-            {
-                userToDelete.is_deleted = true;
-                _context.Entry(userToDelete).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-            }
-
-
         }
 
 

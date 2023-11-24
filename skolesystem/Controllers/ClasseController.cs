@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Intrinsics.X86;
 using Microsoft.AspNetCore.Mvc;
 using skolesystem.DTOs.Classe.Request;
 using skolesystem.DTOs.Classe.Response;
@@ -25,17 +26,20 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at hente alle Classs
                 List<ClasseResponse> ClasseResponses =
                     await _ClasseService.GetAll();
-
+                // Håndter tilfælde, hvor der ikke er nogen data
                 if (ClasseResponses == null)
                 {
                     return Problem("Nothing...");
                 }
+                // Håndter tilfælde, hvor der er en tom liste
                 if (ClasseResponses.Count == 0)
                 {
                     return NoContent();
                 }
+                // Returner HTTP-statuskode 200 OK med Classs som svar
                 return Ok(ClasseResponses);
             }
             catch (Exception exp)
@@ -52,9 +56,10 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at hente en Class
                 ClasseResponse ClasseResponse =
                     await _ClasseService.GetById(Id);
-
+                // Håndter tilfælde, hvor Class ikke er fundet
                 if (ClasseResponse == null)
                 {
                     return Problem("Nothing...");
@@ -76,6 +81,7 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at oprette en ny Class
                 ClasseResponse ClasseResponse =
                     await _ClasseService.Create(newClasse);
 
@@ -97,11 +103,12 @@ namespace skolesystem.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromRoute] int Id,
-        [FromBody] UpdateClasse updateClasse)
+        public async Task<IActionResult> Update([FromRoute] int Id/*modtager id fra frontend*/,
+        [FromBody] UpdateClasse updateClasse/*modtager data*/)
         {
             try
             {
+                // Kald service-metode for at opdatere en eksisterende Class
                 ClasseResponse ClasseResponse =
                     await _ClasseService.Update(Id, updateClasse);
 

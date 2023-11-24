@@ -1,27 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/skolesystem.csproj": {}
+    "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem/skolesystem.csproj": {}
   },
   "projects": {
-    "/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/skolesystem.csproj": {
+    "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem/skolesystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/skolesystem.csproj",
+        "projectUniqueName": "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem/skolesystem.csproj",
         "projectName": "skolesystem",
-        "projectPath": "/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/skolesystem.csproj",
-        "packagesPath": "/Users/paullinecarls/.nuget/packages/",
-        "outputPath": "/Users/paullinecarls/Developer/skolesystem-web/admin-panel-web-api/skolesystem/obj/",
+        "projectPath": "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem/skolesystem.csproj",
+        "packagesPath": "/Users/ramazandtas12gmail.com/.nuget/packages/",
+        "outputPath": "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/paullinecarls/.nuget/NuGet/NuGet.Config"
+          "/Users/ramazandtas12gmail.com/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
           "/usr/local/share/dotnet/library-packs": {},
-          "/usr/local/share/dotnet/sdk/7.0.311/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -59,6 +58,10 @@
             "BCrypt.Net-Next": {
               "target": "Package",
               "version": "[4.0.3, )"
+            },
+            "CoreEx.AutoMapper": {
+              "target": "Package",
+              "version": "[3.5.0, )"
             },
             "FakeItEasy": {
               "target": "Package",
@@ -142,7 +145,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.311/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.403/RuntimeIdentifierGraph.json"
         }
       }
     }

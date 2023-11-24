@@ -18,7 +18,7 @@ namespace skolesystem.Controllers
             _UserSubmissionService = UserSubmissionService;
         }
 
-        [Authorize(2,3)]
+        [Authorize(2,3)]// Autoriser kun brugere med roller 2(lærer) eller 3(elev)
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -27,20 +27,20 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at hente alle UserSubmissions
                 List<UserSubmissionResponse> UserSubmissions = await _UserSubmissionService.GetAll();
-
+                // Håndter tilfælde, hvor der ikke er nogen data
                 if (UserSubmissions == null)
                 {
                     return Problem("Got no data, not even an empty list, this is unexpected");
                 }
-
+                // Håndter tilfælde, hvor der er en tom liste
                 if (UserSubmissions.Count == 0)
                 {
                     return NoContent();
                 }
-
+                // Returner HTTP-statuskode 200 OK med UserSubmissions som svar
                 return Ok(UserSubmissions);
-
             }
             catch (Exception ex)
             {
@@ -58,8 +58,9 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at hente en UserSubmission
                 UserSubmissionResponse UserSubmissions = await _UserSubmissionService.GetById(id);
-
+                // Håndter tilfælde, hvor UserSubmission ikke er fundet
                 if (UserSubmissions == null)
                 {
                     return NotFound();
@@ -81,6 +82,7 @@ namespace skolesystem.Controllers
         {
             try
             {
+                // Kald service-metode for at oprette en ny UserSubmission
                 UserSubmissionResponse UserSubmissions = await _UserSubmissionService.Create(newUserSubmission);
 
                 if (UserSubmissions == null)
@@ -100,10 +102,12 @@ namespace skolesystem.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserSubmission updateUserSubmission)
+        public async Task<IActionResult> Update([FromRoute] int id/*modtager id fra frontend*/,
+            [FromBody] UpdateUserSubmission updateUserSubmission/*modtager data*/)
         {
             try
             {
+                // Kald service-metode for at opdatere en eksisterende UserSubmission
                 UserSubmissionResponse UserSubmissions = await _UserSubmissionService.Update(id, updateUserSubmission);
 
                 if (UserSubmissions == null)
@@ -123,10 +127,11 @@ namespace skolesystem.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id/*modtager id*/)
         {
             try
             {
+                // Kald service-metode for at slette en brugerindsendelse baseret på id
                 bool result = await _UserSubmissionService.Delete(id);
 
                 if (!result)

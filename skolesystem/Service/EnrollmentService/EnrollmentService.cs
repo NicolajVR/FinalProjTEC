@@ -25,6 +25,8 @@ namespace skolesystem.Service.EnrollmentService
 
         public async Task<List<EnrollmentResponse>> GetAllEnrollmentsByClass(int assignmentId)
         {
+            // Kald repository-metode for at hente alle enrollments,fra databasen
+
             List<Enrollments> Enrollment = await _EnrollmentRepository.GetEnrollmentsByClass(assignmentId);
             return Enrollment.Select(a => new EnrollmentResponse
             {
@@ -65,6 +67,7 @@ namespace skolesystem.Service.EnrollmentService
 
         public async Task<EnrollmentResponse?> GetById(int EnrollmentId)
         {
+            // Kald repository-metode for at hente et specifikt enrollments,fra databasen
             Enrollments Enrollment = await _EnrollmentRepository.SelectEnrollmentsById(EnrollmentId);
             return Enrollment == null ? null : new EnrollmentResponse
             {
@@ -88,14 +91,15 @@ namespace skolesystem.Service.EnrollmentService
 
         public async Task<EnrollmentResponse?> Create(NewEnrollment newEnrollment)
         {
+            // Opret et nyt enrollment-objekt ved hjælp af værdier fra Newenrollment
             Enrollments Enrollment = new Enrollments
             {
                 user_id = newEnrollment.UserId,
                 class_id = newEnrollment.ClasseId
             };
 
+            // Indsæt den nye enrollment i repository 
             Enrollment = await _EnrollmentRepository.InsertNewEnrollments(Enrollment);
-            //await _UsersRepository.GetEnrollmentByAssignment(user.CategoryId);
 
             return Enrollment == null ? null : new EnrollmentResponse
             {
@@ -107,12 +111,13 @@ namespace skolesystem.Service.EnrollmentService
 
         public async Task<EnrollmentResponse?> Update(int EnrollmentId, UpdateEnrollment updateEnrollment)
         {
+            // Opret et nyt enrollment-objekt med opdaterede oplysninger
             Enrollments Enrollment = new Enrollments
             {
                 user_id = updateEnrollment.UserId,
                 class_id = updateEnrollment.ClasseId
             };
-
+            // Opdater den eksisterende enrollment i repository'en asynkront
             Enrollment = await _EnrollmentRepository.UpdateExistingEnrollments(EnrollmentId, Enrollment);
             if (Enrollment == null) return null;
             else
@@ -126,7 +131,9 @@ namespace skolesystem.Service.EnrollmentService
         }
         public async Task<bool> Delete(int EnrollmentId)
         {
+            // Anmod om sletning af enrollment fra repository
             var result = await _EnrollmentRepository.DeleteEnrollments(EnrollmentId);
+            // Returner true, hvis sletningen var vellykket
             return (result != null);
         }
 
