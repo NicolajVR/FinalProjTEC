@@ -1,40 +1,30 @@
-﻿using skolesystem.Migrations.UsersDb;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 
 namespace skolesystem.Models
 {
     public class Absence
     {
-        [Key]
-        public int absence_id { get; set; }
+        [Key] //Fortæller det er en primary key
+        public int absence_id { get; set; } // Unik identifikator for fraværet
+
+        [Required] //Fortæller det ikke må være tomt
+        public int user_id { get; set; } // ID på eleven, der er fraværende
 
         [Required]
-        public int user_id { get; set; } // The student who is absent
+        public int teacher_id { get; set; } // ID på læreren, der registrerer fraværet
 
         [Required]
-        public int teacher_id { get; set; } // The teacher recording the absence
+        public int class_id { get; set; } // ID på klassen, hvor fraværet opstod
 
         [Required]
-        public int class_id { get; set; } // The class in which the absence occurred
+        public DateTime absence_date { get; set; } // Dato for fraværet
 
-        [Required]
-        public DateTime absence_date { get; set; } // Date of the absence
+        [Column(TypeName = "nvarchar(255)")] // Bruger nvarchar(255) som databasekolonnetype for at begrænse længden af teksten til 255 tegn.
+        public string reason { get; set; } // Valgfrit felt til at angive årsagen til fraværet
 
-        public string reason { get; set; } // Optional field for specifying the reason for the absence
-
-        public bool is_deleted { get; set; } = false;
-
-        // Navigation properties
-        //[ForeignKey(nameof(user_id))]
-        //public Users User { get; set; }
-
-        //[ForeignKey(nameof(teacher_id))]
-        //public Users Teacher { get; set; }
-
-        //[ForeignKey(nameof(class_id))]
-        //public Class Class { get; set; }
+        public bool is_deleted { get; set; } = false; // Angiver om fraværet er slettet
     }
+
 
 }

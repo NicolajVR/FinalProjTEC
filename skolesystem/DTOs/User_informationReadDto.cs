@@ -25,7 +25,7 @@ namespace skolesystem.DTOs
 
         public int gender_id { get; set; }
 
-        public int user_id {get; set;}
+        public int user_id { get; set; }
 
     }
 }

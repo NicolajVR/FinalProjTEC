@@ -1,5 +1,4 @@
-﻿// move these usings to global usings.cs 
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using skolesystem.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,24 +7,32 @@ using System.Text;
 
 namespace skolesystem.Authorization
 {
+    // Grænseflade til at generere og validere JWT-token
     public interface IJwtUtils
     {
+        // Genererer et JWT-token baseret på brugeroplysninger
         public string GenerateJwtToken(Users user);
+
+        // Validerer et JWT-token og returnerer brugerens ID
         public int? ValidateJwtToken(string token);
     }
 
+    // Implementering af IJwtUtils-grænsefladen
     public class JwtUtils : IJwtUtils
     {
+        // AppSettings-instantiering til adgang til hemmelig nøgle
         private readonly AppSettings _appSettings;
 
+        // Konstruktør, der modtager appSettings som en IOptions-injektion
         public JwtUtils(IOptions<AppSettings> appSettings)
         {
             _appSettings = appSettings.Value;
         }
 
+        // Genererer et JWT-token baseret på brugeroplysninger
         public string GenerateJwtToken(Users user)
         {
-            // generate token that is valid for 7 days
+            // Genererer et token, der er gyldigt i 7 dage
             JwtSecurityTokenHandler tokenHandler = new();
             byte[] key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             SecurityTokenDescriptor tokenDescriptor = new()
@@ -38,6 +45,7 @@ namespace skolesystem.Authorization
             return tokenHandler.WriteToken(token);
         }
 
+        // Validerer et JWT-token og returnerer brugerens ID
         public int? ValidateJwtToken(string token)
         {
             if (token == null)
@@ -47,6 +55,7 @@ namespace skolesystem.Authorization
 
             JwtSecurityTokenHandler tokenHandler = new();
             byte[] key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+
             try
             {
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
@@ -55,19 +64,17 @@ namespace skolesystem.Authorization
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
                     ClockSkew = TimeSpan.Zero
                 }, out SecurityToken validatedToken);
 
                 JwtSecurityToken jwtToken = (JwtSecurityToken)validatedToken;
                 int userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
-                // return user id from JWT token if validation successful
                 return userId;
             }
             catch (Exception ex)
             {
-                // return null if validation fails
+                // Håndter fejl under validering
                 return null;
             }
         }

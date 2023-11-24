@@ -1,11 +1,23 @@
-﻿namespace skolesystem.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace skolesystem.DTOs
 {
     public class AbsenceUpdateDto
     {
-        public int user_id { get; set; } // The student who is absent
-        public int teacher_id { get; set; } // The teacher recording the absence
-        public int class_id { get; set; } // The class in which the absence occurred
-        public DateTime absence_date { get; set; } // Date of the absence
-        public string reason { get; set; } // Optional field for specifying the reason for the absence
+        [Required(ErrorMessage = "User ID is required")]
+        public int user_id { get; set; }
+
+        [Required(ErrorMessage = "Teacher ID is required")]
+        public int teacher_id { get; set; }
+
+        [Required(ErrorMessage = "Class ID is required")]
+        public int class_id { get; set; }
+
+        [Required(ErrorMessage = "Absence date is required")]
+        public DateTime absence_date { get; set; }
+
+        [StringLength(500, ErrorMessage = "Reason must be less than 500 characters")]
+        [MinLength(1, ErrorMessage = "Reason must contain at least 1 character")]
+        public string reason { get; set; }
     }
 }
