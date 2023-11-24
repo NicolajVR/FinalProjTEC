@@ -1,4 +1,7 @@
-"use client";
+"use client"; // Markerer, at denne fil kun bør køres på klientens side, ikke på serveren
+
+
+// Importér nødvendige biblioteker og komponenter fra forskellige moduler
 import {signOut,signIn, useSession} from "next-auth/react";
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
@@ -16,11 +19,14 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Logout } from "@mui/icons-material";
 
+// Header funktion
 const Header = () => {
+    // Brug af React-hooks til at håndtere session og anker-elementer til menuerne
     const{data: session} = useSession();
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
+  
+    // Funktioner til at åbne og lukke navigationsmenuen
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -28,6 +34,7 @@ const Header = () => {
     setAnchorElUser(event.currentTarget);
   };
 
+  // Funktioner til at åbne og lukke brugermenuen
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -37,6 +44,7 @@ const Header = () => {
   };
 
   return (
+    // Selve AppBar'en, der indeholder værktøjslinjen og dens komponenter
     <AppBar position="static" sx={{marginBottom: "40px"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -146,4 +154,4 @@ const Header = () => {
     </AppBar>
   );
 }
-export default Header;
+export default Header; // Eksporterer Header-komponenten som standard, så den kan bruges andre steder i koden

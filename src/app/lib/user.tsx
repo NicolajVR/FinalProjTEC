@@ -9,7 +9,7 @@
       });
       console.log(response);
       if (!response.ok) {
-        throw new Error("Failed to create user");
+        throw new Error("Failed to get user");
       }
       return await response.json();
     } catch (error) {
@@ -63,7 +63,7 @@
       });
       console.log(response);
       if (!response.ok) {
-        throw new Error("Failed to create user");
+        throw new Error("Failed to update user");
       }
       return await response.json();
     } catch (error) {
@@ -77,7 +77,7 @@
         console.log(response);
         
         if (!response.ok) {
-          throw new Error("Failed to create user");
+          throw new Error("Failed to get userbyid");
         }
         return await response.json();
       } catch (error) {
@@ -96,7 +96,7 @@
           });
           console.log(response);
           if (!response.ok) {
-            throw new Error("Failed to create user");
+            throw new Error("Failed to login");
           }
           return await response.json();
         } catch (error) {

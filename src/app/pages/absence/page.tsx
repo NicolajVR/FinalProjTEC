@@ -1,3 +1,17 @@
+/*
+
+Koden har en knap til at bekræfte fravær, en DataGrid til visning af brugerdata, dialoger til at angive fraværsoplysninger, og bruger autocompletes til at vælge klasser og tilhørende brugere.
+
+Komponenten bruger hooks som useState, useEffect til at styre tilstanden og håndtere livscyklus-hændelser for datahentning og opdateringer.
+
+DataGrid'en viser brugerinformation, og der er logik til at redigere rækker og vælge bestemte brugere fra grid'en til fraværsregistrering.
+
+Derudover er der brugt dialoger til at indtaste fraværsoplysninger og knapper til at udløse disse dialoger. Snackbar-komponenten bruges til at vise beskeder om succes eller fejl ved fraværsoprettelse.
+
+*/
+
+
+
 "use client";
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -44,18 +58,13 @@ import { Checkbox, Typography } from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { createAbsence } from "@/app/lib/absence";
 
-// Snackbar and MuiAlart
+// Initialisering af konstanter og hooks
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 
-const roles = ["Market", "Finance", "Development"];
-const randomRole = () => {
-  return randomArrayItem(roles);
-};
-
 let options: string[] = [];
 
-//Datafields i grid.
+// Data til brug i DataGrid komponenten
 const initialRows: GridRowsProp = [
   {
     id: randomId(),
@@ -73,19 +82,16 @@ interface EditToolbarProps {
     newModel: (oldModel: GridRowModesModel) => GridRowModesModel
   ) => void;
 }
-//for knap
+
 function EditToolbar(props: EditToolbarProps) {
+    // Returnerer en værktøjscontainer til brug i grid'en
   const { setRows, setRowModesModel } = props;
-
-  const handleClick = () => {
-    console.log("du har klikket på knappen!");
-  };
-
   return <GridToolbarContainer></GridToolbarContainer>;
 }
 
-// componentFunction
+// Hovedkomponenten
 export default function FullFeaturedCrudGrid() {
+  // Initialiserer flere React-hooks til brug i komponenten
   const [hour, setHour] = React.useState<number | number>(0);
   const [minutes, setMinutes] = React.useState<number | number>(0);
   const [reason, setReason] = React.useState<string>("");
@@ -98,8 +104,6 @@ export default function FullFeaturedCrudGrid() {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
   );
-
-  // MuiAlart and Snackbar
   const [snackbarOpen, setSnackbarOpen] = React.useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState<string>("");
   const [successSnackbarOpen, setSuccessSnackbarOpen] =
@@ -107,24 +111,27 @@ export default function FullFeaturedCrudGrid() {
   const [successSnackbarMessage, setSuccessSnackbarMessage] =
     React.useState<string>("");
 
+  // åbne error dialog box 
   const handleSnackbarOpen = (message: string) => {
     setSnackbarMessage(message);
     setSnackbarOpen(true);
   };
 
+  // åbne success dialog box
   const handleSuccessSnackbarOpen = (message: string) => {
     setSuccessSnackbarMessage(message);
     setSuccessSnackbarOpen(true);
   };
 
-  //No Attendence check.
+  //Tjek Attendence 
   const [noAttendanceChecked, setNoAttendanceChecked] = React.useState(false);
 
   const { data: session, status } = useSession();
 
-  // Use state to manage when to render the component
+  // 
   const [isReady, setIsReady] = useState(false);
 
+   // En række useEffect-hooks anvendes til at håndtere datahentning og opdatering
   useEffect(() => {
     const findIdByName = (
       classesArray: any[],
@@ -139,6 +146,7 @@ export default function FullFeaturedCrudGrid() {
     console.log("Autocomplete value changed:", value);
 
     const fetchData = async () => {
+      //(logik til at hente og opdatere data)
       if (value != null) {
         const classes = await getClassesFromUser(
           session?.user.user_id as number,
@@ -173,7 +181,7 @@ export default function FullFeaturedCrudGrid() {
       }
     };
     fetchData();
-  }, [value]);
+  }, [value] ); // Udføres når værdien af 'value' ændres
 
   useEffect(() => {
     const fetchData = async () => {
@@ -194,6 +202,7 @@ export default function FullFeaturedCrudGrid() {
       console.log("look:", options);
     };
 
+    // hvis session er authenticated so vis data hvis ikke så redirect til /auth/signin
     if (status === "authenticated") {
       setIsReady(true);
       fetchData();
@@ -202,7 +211,7 @@ export default function FullFeaturedCrudGrid() {
     }
 
     console.log(rows[0]);
-  }, [status]);
+  }, [status]); // Udføres når 'status' ændres
 
   // Only render the profile page if isReady is true
   if (!isReady) {
@@ -321,14 +330,14 @@ export default function FullFeaturedCrudGrid() {
       return false;
     }
 
-    if (hour < 0 || hour > 8 || isNaN(hour)){
+    if (hour < 0 || hour > 8 || isNaN(hour)) {
       handleSnackbarOpen(
         "Invalid hours. Please enter a value between 0 and 8."
       );
       return false;
     }
 
-    if (minutes < 0 || minutes >= 60 || isNaN(minutes)){
+    if (minutes < 0 || minutes >= 60 || isNaN(minutes)) {
       handleSnackbarOpen(
         "Invalid minutes. Please enter a value between 0 and 59."
       );
@@ -348,7 +357,7 @@ export default function FullFeaturedCrudGrid() {
     return true;
   };
 
-  //absence open
+   // Funktioner til at åbne og lukke dialogvinduet for fravær
   const handleClickOpen = () => {
     setOpen(true);
     setHour(0); // Reset hour to 0 when opening the dialog
@@ -370,13 +379,6 @@ export default function FullFeaturedCrudGrid() {
     }
   };
 
-  const handleEditClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
-
-  const handleSaveClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-  };
 
   const handleCancelClick = (id: GridRowId) => () => {
     setRowModesModel({
@@ -390,11 +392,12 @@ export default function FullFeaturedCrudGrid() {
     }
   };
 
+   // Event handler til at håndtere valg af rækker i grid'en
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);
   };
 
-  //grid coloner
+   // Definition af kolonner i grid'en
   const columns: GridColDef[] = [
     { field: "name", headerName: "Name", width: 120, editable: true },
     {
@@ -405,61 +408,60 @@ export default function FullFeaturedCrudGrid() {
     },
   ];
 
-
   const onRowsSelectionHandler = (ids: any[]) => {
     const selectedRowsData = ids.map((id) => rows.find((row) => row.id === id));
     setSelected(selectedRowsData[0]?.name);
     setSelectedID(selectedRowsData[0]?.id);
     console.log("this is the selected row: ", selectedRowsData[0]?.name);
   };
+
+  // Returnerer JSX-koden for den komplette komponent med knapper, grid og dialoger
   return (
     <>
       <h1>Student Absence</h1>
 
-      
-
       <React.Fragment>
-        <div style={{display: "flex"}}>
-        <Button
-          color="primary"
-          variant="contained"
-          startIcon={<AddBoxIcon />}
-          onClick={handleClickOpen}
-          sx={{ borderRadius: 0, boxShadow: 0}}
-        >
-          Absence
-        </Button>
+        <div style={{ display: "flex" }}>
+          <Button
+            color="primary"
+            variant="contained"
+            startIcon={<AddBoxIcon />}
+            onClick={handleClickOpen}
+            sx={{ borderRadius: 0, boxShadow: 0 }}
+          >
+            Absence
+          </Button>
 
-
-        <Autocomplete
-        value={value}
-        onChange={(event: any, newValue: string | null) => {
-          setValue(newValue);
-        }}
-        inputValue={inputValue}
-        onInputChange={(event, newInputValue) => {
-          setInputValue(newInputValue);
-        }}
-        id="controllable-states-Klasse"
-        options={options}
-        sx={{ width: 200, "& .MuiAutocomplete-inputRoot":{
-          borderRadius: 0,
-        } }}
-        renderInput={(params) => <TextField {...params} label="Class" />}
-        renderOption={(props, option) => (
-          <li {...props} key={option}>
-            {option}
-          </li>
-        )}
-        renderTags={(tagValue, getTagProps) =>
-          tagValue.map((option, index) => (
-            <Chip {...getTagProps({ index })} key={option} label={option} />
-          ))
-        }
-      ></Autocomplete>
+          <Autocomplete
+            value={value}
+            onChange={(event: any, newValue: string | null) => {
+              setValue(newValue);
+            }}
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue);
+            }}
+            id="controllable-states-Klasse"
+            options={options}
+            sx={{
+              width: 200,
+              "& .MuiAutocomplete-inputRoot": {
+                borderRadius: 0,
+              },
+            }}
+            renderInput={(params) => <TextField {...params} label="Class" />}
+            renderOption={(props, option) => (
+              <li {...props} key={option}>
+                {option}
+              </li>
+            )}
+            renderTags={(tagValue, getTagProps) =>
+              tagValue.map((option, index) => (
+                <Chip {...getTagProps({ index })} key={option} label={option} />
+              ))
+            }
+          ></Autocomplete>
         </div>
-        
-
 
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle> {selected} </DialogTitle>
@@ -560,7 +562,7 @@ export default function FullFeaturedCrudGrid() {
           slotProps={{
             toolbar: { setRows, setRowModesModel },
           }}
-          sx={{ borderRadius: 0}}
+          sx={{ borderRadius: 0 }}
         />
       </Box>
       <Snackbar

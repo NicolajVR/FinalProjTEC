@@ -5,7 +5,7 @@ export default async function softdeleteProfile(id: number) {
     });
     console.log(response);
     if (!response.ok) {
-      throw new Error("Failed to create user");
+      throw new Error("Failed to delete profile");
     }
     return await response.json();
 

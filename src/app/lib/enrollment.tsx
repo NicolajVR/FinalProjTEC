@@ -49,7 +49,7 @@ export async function getClassesFromUser(id: number, token: any) {
       });
       console.log(response);
       if (!response.ok) {
-        throw new Error("Failed to create user");
+        throw new Error("Failed to create enrollment");
       }
       return await response.json();
     } catch (error) {

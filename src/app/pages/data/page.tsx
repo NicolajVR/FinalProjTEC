@@ -37,6 +37,7 @@ import createProfile from "@/app/lib/createProfile";
 import getProfiles from "@/app/lib/getProfiles";
 import updateProfile from "@/app/lib/updateProfile";
 
+// Initialisering af rækker til DataGrid-komponenten
 const initialRows: GridRowsProp = [
   {
     id: randomId(),
@@ -51,13 +52,7 @@ const initialRows: GridRowsProp = [
   },
 ];
 
-interface EditToolbarProps {
-  setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-  setRowModesModel: (
-    newModel: (oldModel: GridRowModesModel) => GridRowModesModel
-  ) => void;
-}
-
+//Hoved function 
 export default function FullFeaturedCrudGrid() {
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
@@ -65,8 +60,6 @@ export default function FullFeaturedCrudGrid() {
   );
 
   const { data: session, status } = useSession();
-
-  // Use state to manage when to render the component
   const [isReady, setIsReady] = useState(false);
 
   /* 
@@ -100,6 +93,7 @@ export default function FullFeaturedCrudGrid() {
 
   */
 
+    //hente brugerprofiler ved indlæsning af komponenten
   useEffect(() => {
     const fetchData = async () => {
       setIsReady(true);
@@ -138,13 +132,13 @@ export default function FullFeaturedCrudGrid() {
       setIsReady(true);
       fetchData();
     } else if (status === "unauthenticated") {
-      redirect("/auth/signin");
+      redirect("/auth/signin"); // Omdirigerer til login, hvis ikke autentificeret
     }
 
     console.log(rows[0]);
   }, [status]);
 
-  // Only render the profile page if isReady is true
+  // Returnerer ingenting, hvis data ikke er klar
   if (!isReady) {
     return null;
   }

@@ -1,29 +1,29 @@
-"use client";
+"use client"; // Markerer, at denne fil kun skal køres på klientens side, ikke på serveren
 import { useSession, signIn, signOut } from "next-auth/react"
 import scss from "./Login.module.scss";
 import styled from '@emotion/styled';
 import { Paper, Typography, TextField, Button } from '@mui/material';
 import { redirect } from "next/navigation";
 
+// Definér Login-komponenten
 const Login = () => {
+  // Brug af React-hook til at få sessionsdata
     const { data: session } = useSession();
     const CenteredContainer = styled.div``;
 
-//styledpaper for loginform
+// Styled-komponenter til at tilpasse udseendet af Material-UI komponenter
 const StyledPaper = styled(Paper)``;
 
-// individuel text field
-const StyledTextField = styled(TextField)``;
 
-// button
 const StyledButton = styled(Button)``;
 
-
+ // Hvis der er en aktiv session, omdiriger til "/pages/calendar"
     if(session) {
         return redirect("/pages/calendar");
         
     }
     return <>
+    {/* Login-formular med styled Material-UI komponenter */}
         <div>
     <CenteredContainer className={scss.CenteredContainer} >
       <StyledPaper elevation={3} className={scss.StyledPaper}>

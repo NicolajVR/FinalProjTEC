@@ -1,14 +1,17 @@
-"use client";
-import React from "react";
-import Login from "@/app/components/Login/page";
-import { useSession } from "next-auth/react";
-import Box from "@mui/material/Box";
+"use client"; // Dette markerer, at denne fil kun skal køres på klienten (browseren), ikke på serveren.
 
+// Importér nødvendige biblioteker og komponenter fra React og andre moduler
+import React from "react";
+import Login from "@/app/components/Login/page"; 
+
+// Definér funktionen SignIn 
 const SignIn = () => {
 
   return (
-      <Login />
+    // Returnér Login-komponenten, som  indeholder loginformularen
+      <Login /> 
   );
 };
 
-export default SignIn;
+// Eksporter SignIn-komponenten som standard, så den kan bruges andre steder i koden
+export default SignIn; 

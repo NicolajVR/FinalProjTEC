@@ -9,7 +9,7 @@ export async function getSubmissions(token: any) {
       });
       console.log(response);
       if (!response.ok) {
-        throw new Error("Failed to create user");
+        throw new Error("Failed to get submissions");
       }
       return await response.json();
     } catch (error) {
@@ -28,7 +28,7 @@ export async function getSubmissions(token: any) {
       });
       console.log(response);
       if (!response.ok) {
-        throw new Error("Failed to create user");
+        throw new Error("Failed to create submissions");
       }
       return await response.json();
     } catch (error) {
@@ -45,7 +45,7 @@ export async function getSubmissions(token: any) {
       });
       console.log(response);
       if (!response.ok) {
-        throw new Error("Failed to delete user");
+        throw new Error("Failed to delete submission");
       }
       return await response.json();
     } catch (error) {

@@ -1,3 +1,5 @@
+
+//Update Profile
 export default async function updateProfile(user: any, id: number) {
     try {
     const response = await fetch("https://localhost:7136/api/User_information/" + id, {
@@ -10,7 +12,7 @@ export default async function updateProfile(user: any, id: number) {
     });
     console.log(response);
     if (!response.ok) {
-      throw new Error("Failed to create user");
+      throw new Error("Failed to update profile");
     }
     return await response.json();
 

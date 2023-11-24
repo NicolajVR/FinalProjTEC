@@ -5,7 +5,7 @@ export async function getsubjects() {
       });
       console.log(response);
       if (!response.ok) {
-        throw new Error("Failed to create user");
+        throw new Error("Failed to get subjects");
       }
       return await response.json();
     } catch (error) {

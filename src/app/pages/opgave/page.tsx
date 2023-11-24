@@ -1,3 +1,10 @@
+/**
+ * Dette demonstrerer en React-komponent til håndtering af opgaver ved hjælp af en DataGrid.
+ * Komponenten giver mulighed for at tilføje, redigere, slette og opdatere opgaver, der er tilknyttet bestemte klasser og emner.
+ * Det bruger Material-UI-komponenter som TextField, Autocomplete, Chip og DataGrid fra @mui/x-data-grid.
+ */
+
+
 "use client";
 import * as React from "react";
 import Box from "@mui/material/Box";

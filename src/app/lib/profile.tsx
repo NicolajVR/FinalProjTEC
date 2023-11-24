@@ -4,7 +4,7 @@ export async function getProfileById(id: number) {
       console.log(response);
       
       if (!response.ok) {
-        throw new Error("Failed to create user");
+        throw new Error("Failed to create profilebyid");
       }
       return await response.json();
     } catch (error) {

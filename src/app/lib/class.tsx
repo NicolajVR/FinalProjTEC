@@ -1,14 +1,17 @@
+
+
+//GET Class
 export async function getClass() {
     const response = await fetch("https://localhost:7136/api/Classe");
   
     if (!response.ok) {
-      throw new Error("failed to fetch users");
+      throw new Error("failed to fetch classes");
     }
 
     return await response.json();
   }
   
-  //POST absence
+  //POST Class
 export async function createClass(absence: any) {
     try {
       const response = await fetch("https://localhost:7136/api/Classe", {
@@ -20,7 +23,7 @@ export async function createClass(absence: any) {
       });
       console.log(response);
       if (!response.ok) {
-        throw new Error("Failed to create absence");
+        throw new Error("Failed to create classes");
       }
       return await response.json();
       

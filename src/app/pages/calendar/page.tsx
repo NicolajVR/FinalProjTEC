@@ -19,10 +19,11 @@ import { redirect } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const Dashboard = () => {
+  // Henter session og status fra NextAuth
   const { data: session, status } = useSession();
-  let checkin = true;
+  let checkin = true; // Variabel til at styre redigerbarhed
 
-  // Use state to manage when to render the component
+  // Use state til at styre rendering af komponenten og til at håndtere scheduler
   const [isReady, setIsReady] = useState(false);
   const [EVENTS, setEVENTS] = useState([]);
 
@@ -30,11 +31,11 @@ const Dashboard = () => {
 
     const fetchData = async () => {
       if (status === "authenticated") {
-        setIsReady(true);
-        const schedules = await getSchedule();
+        setIsReady(true);  // Markerer at data er klar til brug
+        const schedules = await getSchedule(); // Henter skemaer fra databasen
         console.log(schedules);
 
-
+        // hvis elev så ikke give adgang til redigere på scheduler
         if (session.user.role_id == 3)
         {
 
@@ -72,6 +73,7 @@ const Dashboard = () => {
     return null;
   }
 
+  // Event handler til sletning af en schedule
   const handleDeleteClick = async (deletedId: string): Promise<string> => {
     console.log("here: ", deletedId);
     deleteSchedule(parseInt(deletedId));
@@ -81,6 +83,7 @@ const Dashboard = () => {
     });
   };
 
+   // Event handler til  redigering af en schedule 
   const handleSaveClick = async (
     event: ProcessedEvent,
     action: EventActions
@@ -158,6 +161,7 @@ const Dashboard = () => {
     });
   };
 
+  // Returnerer Scheduler-komponenten til visning af skemaet
   return (
     <Scheduler
       view="week"
