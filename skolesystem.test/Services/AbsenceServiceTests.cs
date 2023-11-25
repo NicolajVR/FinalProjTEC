@@ -1,112 +1,106 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentAssertions;
 using global::skolesystem.DTOs;
 using global::skolesystem.Models;
 using global::skolesystem.Repository;
 using global::skolesystem.Service;
 using Moq;
-using Xunit;
 
 namespace skolesystem.Tests.Services
 {
-           public class AbsenceServiceTests
+    public class AbsenceServiceTests
+    {
+        private readonly IMapper _mapper; // Add an instance of IMapper
+        private readonly IAbsenceService _absenceService; // Add an instance of IAbsenceService
+        private readonly Mock<IAbsenceRepository> _absenceRepositoryMock = new Mock<IAbsenceRepository>();
+
+        // Constructor 
+        public AbsenceServiceTests()
         {
-            private readonly IMapper _mapper; // Add an instance of IMapper
-            private readonly IAbsenceService _absenceService; // Add an instance of IAbsenceService
-            private readonly Mock<IAbsenceRepository> _absenceRepositoryMock = new Mock<IAbsenceRepository>();
+            // Initialize IMapper 
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfiles>());
+            _mapper = new Mapper(configuration);
 
-            // Constructor 
-            public AbsenceServiceTests()
+            // Provide _mapper to the AbsenceService constructor
+            _absenceService = new AbsenceService(_absenceRepositoryMock.Object, _mapper);
+        }
+        [Fact]
+        public async Task GetAbsenceById_ShouldReturnDto_WhenAbsenceExists()
+        {
+            // Arrange
+            int absenceId = 1;
+            var existingAbsence = new Absence
             {
-                // Initialize IMapper 
-                var configuration = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfiles>());
-                _mapper = new Mapper(configuration);
+                absence_id = absenceId,
+                user_id = 1,
+                teacher_id = 1,
+                class_id = 1,
+                absence_date = "29/9",
+                reason = "Reason 1",
+                is_deleted = false
+            };
 
-                // Provide _mapper to the AbsenceService constructor
-                _absenceService = new AbsenceService(_absenceRepositoryMock.Object, _mapper);
-            }
-            [Fact]
-            public async Task GetAbsenceById_ShouldReturnDto_WhenAbsenceExists()
+            var mapperMock = new Mock<IMapper>();
+            mapperMock.Setup(mapper => mapper.Map<AbsenceReadDto>(existingAbsence)).Returns(new AbsenceReadDto
             {
-                // Arrange
-                int absenceId = 1;
-                var existingAbsence = new Absence
-                {
-                    absence_id = absenceId,
-                    user_id = 1,
-                    teacher_id = 1,
-                    class_id = 1,
-                    absence_date = DateTime.Now,
-                    reason = "Reason 1",
-                    is_deleted = false
-                };
+                absence_id = existingAbsence.absence_id,
+                user_id = existingAbsence.user_id,
+                teacher_id = existingAbsence.teacher_id,
+                class_id = existingAbsence.class_id,
+                absence_date = existingAbsence.absence_date,
+                reason = existingAbsence.reason,
+                is_deleted = existingAbsence.is_deleted
+            });
 
-                var mapperMock = new Mock<IMapper>();
-                mapperMock.Setup(mapper => mapper.Map<AbsenceReadDto>(existingAbsence)).Returns(new AbsenceReadDto
-                {
-                    absence_id = existingAbsence.absence_id,
-                    user_id = existingAbsence.user_id,
-                    teacher_id = existingAbsence.teacher_id,
-                    class_id = existingAbsence.class_id,
-                    absence_date = existingAbsence.absence_date,
-                    reason = existingAbsence.reason,
-                    is_deleted = existingAbsence.is_deleted
-                });
+            var repositoryMock = new Mock<IAbsenceRepository>();
+            repositoryMock.Setup(repo => repo.GetById(absenceId)).ReturnsAsync(existingAbsence);
 
-                var repositoryMock = new Mock<IAbsenceRepository>();
-                repositoryMock.Setup(repo => repo.GetById(absenceId)).ReturnsAsync(existingAbsence);
+            var service = new AbsenceService(repositoryMock.Object, mapperMock.Object);
 
-                var service = new AbsenceService(repositoryMock.Object, mapperMock.Object);
+            // Act
+            var result = await service.GetAbsenceById(absenceId);
 
-                // Act
-                var result = await service.GetAbsenceById(absenceId);
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeOfType<AbsenceReadDto>();
+            result.absence_id.Should().Be(existingAbsence.absence_id);
+            result.user_id.Should().Be(existingAbsence.user_id);
+            result.teacher_id.Should().Be(existingAbsence.teacher_id);
+            result.class_id.Should().Be(existingAbsence.class_id);
+            result.absence_date.Should().Be(existingAbsence.absence_date);
+            result.reason.Should().Be(existingAbsence.reason);
+            result.is_deleted.Should().Be(existingAbsence.is_deleted);
 
-                // Assert
-                result.Should().NotBeNull();
-                result.Should().BeOfType<AbsenceReadDto>();
-                result.absence_id.Should().Be(existingAbsence.absence_id);
-                result.user_id.Should().Be(existingAbsence.user_id);
-                result.teacher_id.Should().Be(existingAbsence.teacher_id);
-                result.class_id.Should().Be(existingAbsence.class_id);
-                result.absence_date.Should().Be(existingAbsence.absence_date);
-                result.reason.Should().Be(existingAbsence.reason);
-                result.is_deleted.Should().Be(existingAbsence.is_deleted);
+            // Additional assertions for mapper interactions (optional)
+            mapperMock.Verify(mapper => mapper.Map<AbsenceReadDto>(existingAbsence), Times.Once);
+        }
 
-                // Additional assertions for mapper interactions (optional)
-                mapperMock.Verify(mapper => mapper.Map<AbsenceReadDto>(existingAbsence), Times.Once);
-            }
+        [Fact]
+        public async Task GetAbsenceById_ShouldReturnNull_WhenAbsenceDoesNotExist()
+        {
+            // Arrange
+            int absenceId = 1;
+            var mapperMock = new Mock<IMapper>();
+            var repositoryMock = new Mock<IAbsenceRepository>();
+            repositoryMock.Setup(repo => repo.GetById(absenceId)).ReturnsAsync((Absence)null);
 
-            [Fact]
-            public async Task GetAbsenceById_ShouldReturnNull_WhenAbsenceDoesNotExist()
-            {
-                // Arrange
-                int absenceId = 1;
-                var mapperMock = new Mock<IMapper>();
-                var repositoryMock = new Mock<IAbsenceRepository>();
-                repositoryMock.Setup(repo => repo.GetById(absenceId)).ReturnsAsync((Absence)null);
+            var service = new AbsenceService(repositoryMock.Object, mapperMock.Object);
 
-                var service = new AbsenceService(repositoryMock.Object, mapperMock.Object);
+            // Act
+            var result = await service.GetAbsenceById(absenceId);
 
-                // Act
-                var result = await service.GetAbsenceById(absenceId);
+            // Assert
+            result.Should().BeNull();
 
-                // Assert
-                result.Should().BeNull();
+            // Additional assertions for mapper interactions (optional)
+            mapperMock.Verify(mapper => mapper.Map<AbsenceReadDto>(It.IsAny<Absence>()), Times.Never);
+        }
 
-                // Additional assertions for mapper interactions (optional)
-                mapperMock.Verify(mapper => mapper.Map<AbsenceReadDto>(It.IsAny<Absence>()), Times.Never);
-            }
-
-            [Fact]
-            public async Task GetAllAbsences_ShouldReturnDtoList_WhenAbsencesExist()
-            {
-                // Arrange
-                var absencesData = new List<Absence>
+        [Fact]
+        public async Task GetAllAbsences_ShouldReturnDtoList_WhenAbsencesExist()
+        {
+            // Arrange
+            var absencesData = new List<Absence>
                     {
                         // Add your Absence data here
                         new Absence
@@ -115,44 +109,44 @@ namespace skolesystem.Tests.Services
                             user_id = 1,
                             teacher_id = 1,
                             class_id = 1,
-                            absence_date = DateTime.Now,
+                            absence_date = "29/9",
                             reason = "Reason 1",
                             is_deleted = false
                         },
-                        
+
                     };
 
-                _absenceRepositoryMock.Setup(repo => repo.GetAll()).ReturnsAsync(absencesData);
+            _absenceRepositoryMock.Setup(repo => repo.GetAll()).ReturnsAsync(absencesData);
 
-                // Act
-                var result = await _absenceService.GetAllAbsences();
+            // Act
+            var result = await _absenceService.GetAllAbsences();
 
-                // Assert
-                result.Should().NotBeNull().And.BeAssignableTo<IEnumerable<AbsenceReadDto>>();
-                var absenceDtos = result.Should().BeAssignableTo<IEnumerable<AbsenceReadDto>>().Subject;
+            // Assert
+            result.Should().NotBeNull().And.BeAssignableTo<IEnumerable<AbsenceReadDto>>();
+            var absenceDtos = result.Should().BeAssignableTo<IEnumerable<AbsenceReadDto>>().Subject;
 
-                absenceDtos.Should().HaveCount(absencesData.Count);
-
-                
-                foreach (var (absenceDto, absence) in absenceDtos.Zip(absencesData))
-                {
-                    absenceDto.Should().BeEquivalentTo(absence);
-                }
-            }
+            absenceDtos.Should().HaveCount(absencesData.Count);
 
 
-            [Fact]
-            public async Task GetAllAbsences_ShouldReturnEmptyList_WhenAbsencesDoNotExist()
+            foreach (var (absenceDto, absence) in absenceDtos.Zip(absencesData))
             {
-                // Arrange
-                _absenceRepositoryMock.Setup(repo => repo.GetAll()).ReturnsAsync(new List<Absence>());
-
-                // Act
-                var result = await _absenceService.GetAllAbsences();
-
-                // Assert
-                result.Should().NotBeNull().And.BeAssignableTo<IEnumerable<AbsenceReadDto>>().And.BeEmpty();
+                absenceDto.Should().BeEquivalentTo(absence);
             }
+        }
+
+
+        [Fact]
+        public async Task GetAllAbsences_ShouldReturnEmptyList_WhenAbsencesDoNotExist()
+        {
+            // Arrange
+            _absenceRepositoryMock.Setup(repo => repo.GetAll()).ReturnsAsync(new List<Absence>());
+
+            // Act
+            var result = await _absenceService.GetAllAbsences();
+
+            // Assert
+            result.Should().NotBeNull().And.BeAssignableTo<IEnumerable<AbsenceReadDto>>().And.BeEmpty();
+        }
 
         [Fact]
         public async Task GetDeletedAbsences_ShouldReturnListOfDeletedAbsenceReadDto_WhenDeletedAbsencesExist()
@@ -160,8 +154,8 @@ namespace skolesystem.Tests.Services
             // Arrange
             var deletedAbsences = new List<Absence>
             {
-            new Absence { absence_id = 1, user_id = 1, teacher_id = 1, class_id = 1, absence_date = DateTime.Now, reason = "Reason 1", is_deleted = true },
-            new Absence { absence_id = 2, user_id = 2, teacher_id = 2, class_id = 2, absence_date = DateTime.Now, reason = "Reason 2", is_deleted = true },
+            new Absence { absence_id = 1, user_id = 1, teacher_id = 1, class_id = 1, absence_date = "29/9", reason = "Reason 1", is_deleted = true },
+            new Absence { absence_id = 2, user_id = 2, teacher_id = 2, class_id = 2, absence_date = "29/9", reason = "Reason 2", is_deleted = true },
             };
 
             _absenceRepositoryMock.Setup(repo => repo.GetDeletedAbsences()).ReturnsAsync(deletedAbsences);
@@ -197,7 +191,7 @@ namespace skolesystem.Tests.Services
                 user_id = 1,
                 teacher_id = 1,
                 class_id = 1,
-                absence_date = DateTime.Now,
+                absence_date = "29/9",
                 reason = "Reason 1"
             };
 
@@ -226,7 +220,7 @@ namespace skolesystem.Tests.Services
                 user_id = 1,
                 teacher_id = 1,
                 class_id = 1,
-                absence_date = DateTime.Now,
+                absence_date = "29/9",
                 reason = "Reason 1"
             };
 
@@ -246,7 +240,7 @@ namespace skolesystem.Tests.Services
                 user_id = 1,
                 teacher_id = 1,
                 class_id = 1,
-                absence_date = DateTime.Now,
+                absence_date = "29/9",
                 reason = "Updated Reason"
             };
 
@@ -270,7 +264,7 @@ namespace skolesystem.Tests.Services
                 user_id = 1,
                 teacher_id = 1,
                 class_id = 1,
-                absence_date = DateTime.Now,
+                absence_date = "29/9",
                 reason = "Updated Reason"
             };
 
@@ -315,4 +309,4 @@ namespace skolesystem.Tests.Services
     }
 
 }
-    
+
