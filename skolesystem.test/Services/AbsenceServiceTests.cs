@@ -41,7 +41,7 @@ namespace skolesystem.Tests.Services
                     user_id = 1,
                     teacher_id = 1,
                     class_id = 1,
-                    absence_date = DateTime.Now,
+                    absence_date = "2023-11-25",
                     reason = "Reason 1",
                     is_deleted = false
                 };
@@ -115,7 +115,7 @@ namespace skolesystem.Tests.Services
                             user_id = 1,
                             teacher_id = 1,
                             class_id = 1,
-                            absence_date = DateTime.Now,
+                            absence_date = "2023-11-11",
                             reason = "Reason 1",
                             is_deleted = false
                         },
@@ -160,8 +160,8 @@ namespace skolesystem.Tests.Services
             // Arrange
             var deletedAbsences = new List<Absence>
             {
-            new Absence { absence_id = 1, user_id = 1, teacher_id = 1, class_id = 1, absence_date = DateTime.Now, reason = "Reason 1", is_deleted = true },
-            new Absence { absence_id = 2, user_id = 2, teacher_id = 2, class_id = 2, absence_date = DateTime.Now, reason = "Reason 2", is_deleted = true },
+            new Absence { absence_id = 1, user_id = 1, teacher_id = 1, class_id = 1, absence_date = "2023-11-11", reason = "Reason 1", is_deleted = true },
+            new Absence { absence_id = 2, user_id = 2, teacher_id = 2, class_id = 2, absence_date = "2023-11-11", reason = "Reason 2", is_deleted = true },
             };
 
             _absenceRepositoryMock.Setup(repo => repo.GetDeletedAbsences()).ReturnsAsync(deletedAbsences);
@@ -197,7 +197,7 @@ namespace skolesystem.Tests.Services
                 user_id = 1,
                 teacher_id = 1,
                 class_id = 1,
-                absence_date = DateTime.Now,
+                absence_date = "2023-11-11",
                 reason = "Reason 1"
             };
 
@@ -226,7 +226,7 @@ namespace skolesystem.Tests.Services
                 user_id = 1,
                 teacher_id = 1,
                 class_id = 1,
-                absence_date = DateTime.Now,
+                absence_date = "2023-11-11",
                 reason = "Reason 1"
             };
 
@@ -246,7 +246,7 @@ namespace skolesystem.Tests.Services
                 user_id = 1,
                 teacher_id = 1,
                 class_id = 1,
-                absence_date = DateTime.Now,
+                absence_date = "2023-11-11",
                 reason = "Updated Reason"
             };
 
@@ -270,7 +270,7 @@ namespace skolesystem.Tests.Services
                 user_id = 1,
                 teacher_id = 1,
                 class_id = 1,
-                absence_date = DateTime.Now,
+                absence_date = "2023-11-11",
                 reason = "Updated Reason"
             };
 
