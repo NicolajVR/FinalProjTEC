@@ -14,7 +14,7 @@ namespace skolesystem.DTOs
         public int class_id { get; set; }
 
         [Required(ErrorMessage = "Absence date is required")]
-        public DateTime absence_date { get; set; }
+        public string absence_date { get; set; }
 
         [StringLength(255, ErrorMessage = "Max string length is 255")]
         [MinLength(1, ErrorMessage = "Min string length is 1")]

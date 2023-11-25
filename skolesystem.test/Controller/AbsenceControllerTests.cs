@@ -37,8 +37,8 @@ namespace skolesystem.Tests.Controller
             // Arrange
             var absences = new List<Absence>
     {
-        new Absence { absence_id = 1, user_id = 1, teacher_id = 1, class_id = 1, absence_date = DateTime.Now, reason = "Reason 1", is_deleted = false },
-        new Absence { absence_id = 2, user_id = 2, teacher_id = 2, class_id = 2, absence_date = DateTime.Now, reason = "Reason 2", is_deleted = false },
+        new Absence { absence_id = 1, user_id = 1, teacher_id = 1, class_id = 1, absence_date = "2023-11-25", reason = "Reason 1", is_deleted = false },
+        new Absence { absence_id = 2, user_id = 2, teacher_id = 2, class_id = 2, absence_date = "2023-11-25", reason = "Reason 2", is_deleted = false },
     };
 
             _absenceRepositoryMock.Setup(repo => repo.GetAll()).ReturnsAsync(absences);
@@ -72,7 +72,7 @@ namespace skolesystem.Tests.Controller
         {
             // Arrange
             int absenceId = 1;
-            var existingAbsence = new Absence { absence_id = absenceId, user_id = 1, teacher_id = 1, class_id = 1, absence_date = DateTime.Now, reason = "Reason 1", is_deleted = false };
+            var existingAbsence = new Absence { absence_id = absenceId, user_id = 1, teacher_id = 1, class_id = 1, absence_date = "2023-11-25", reason = "Reason 1", is_deleted = false };
 
             _absenceRepositoryMock.Setup(repo => repo.GetById(absenceId)).ReturnsAsync(existingAbsence);
 
@@ -112,7 +112,7 @@ namespace skolesystem.Tests.Controller
                 user_id = 1,
                 teacher_id = 1,
                 class_id = 1,
-                absence_date = DateTime.Now,
+                absence_date = "2023-11-25",
                 reason = "Reason 1"
             };
 
@@ -147,7 +147,7 @@ namespace skolesystem.Tests.Controller
                 user_id = 1,
                 teacher_id = 1,
                 class_id = 1,
-                absence_date = DateTime.Now,
+                absence_date = "2023-11-25",
                 reason = "Reason 1"
             };
 
@@ -164,8 +164,8 @@ namespace skolesystem.Tests.Controller
         {
             // Arrange
             int absenceId = 1;
-            var existingAbsence = new Absence { absence_id = absenceId, user_id = 1, teacher_id = 1, class_id = 1, absence_date = DateTime.Now, reason = "Reason 1", is_deleted = false };
-            var updatedAbsenceDto = new AbsenceUpdateDto { user_id = 2, teacher_id = 2, class_id = 2, absence_date = DateTime.Now.AddDays(1), reason = "Updated Reason" };
+            var existingAbsence = new Absence { absence_id = absenceId, user_id = 1, teacher_id = 1, class_id = 1, absence_date = "2023-11-25", reason = "Reason 1", is_deleted = false };
+            var updatedAbsenceDto = new AbsenceUpdateDto { user_id = 2, teacher_id = 2, class_id = 2, absence_date = "2023-11-26", reason = "Updated Reason" };
 
             _absenceRepositoryMock.Setup(repo => repo.GetById(absenceId)).ReturnsAsync(existingAbsence);
 
@@ -182,7 +182,7 @@ namespace skolesystem.Tests.Controller
         {
             // Arrange
             int absenceId = 1;
-            var updatedAbsenceDto = new AbsenceUpdateDto { user_id = 2, teacher_id = 2, class_id = 2, absence_date = DateTime.Now.AddDays(1), reason = "Updated Reason" };
+            var updatedAbsenceDto = new AbsenceUpdateDto { user_id = 2, teacher_id = 2, class_id = 2, absence_date = "2023-11-25", reason = "Updated Reason" };
 
             _absenceRepositoryMock.Setup(repo => repo.GetById(absenceId)).ReturnsAsync((Absence)null);
 
@@ -196,7 +196,7 @@ namespace skolesystem.Tests.Controller
         {
             // Arrange
             int absenceId = 1;
-            var existingAbsence = new Absence { absence_id = absenceId, user_id = 1, teacher_id = 1, class_id = 1, absence_date = DateTime.Now, reason = "Reason 1", is_deleted = false };
+            var existingAbsence = new Absence { absence_id = absenceId, user_id = 1, teacher_id = 1, class_id = 1, absence_date = "2023-11-25", reason = "Reason 1", is_deleted = false };
 
             _absenceRepositoryMock.Setup(repo => repo.GetById(absenceId)).ReturnsAsync(existingAbsence);
 

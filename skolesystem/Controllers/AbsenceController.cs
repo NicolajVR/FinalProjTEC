@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using skolesystem.Authorization;
 using skolesystem.DTOs;
 using skolesystem.Service;
 
@@ -65,7 +66,7 @@ namespace skolesystem.Controllers
     - Denne metode henter fraværsdata fra tjenesten, mapper dem til DTO'er og sender dem som JSON-respons.
     - Ved hjælp af asynkrone metoder sikrer den, at anmodningen ikke blokerer tråden, mens data hentes fra tjenesten
 
-*/
+*/      [Authorize(2)]
         [HttpGet]
         public async Task<IEnumerable<AbsenceReadDto>> GetAbsences()
         {
@@ -120,7 +121,7 @@ namespace skolesystem.Controllers
     - Ok(absenceDto) returnerer en HTTP 200-respons med AbsenceReadDto som svar, hvis fraværet findes.
 
 */
-
+        [Authorize(2)]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(AbsenceReadDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -172,7 +173,7 @@ namespace skolesystem.Controllers
     - ProducesResponseType-attributten dokumenterer forventet statuskode for en vellykket anmodning.
     - CreatedAtAction bruges til at generere en korrekt Location-header for den oprettede ressource.
 
-*/
+*/      [Authorize(2)]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> CreateAbsence(AbsenceCreateDto absenceDto)
@@ -211,7 +212,7 @@ namespace skolesystem.Controllers
     - NotFound() returnerer en HTTP 404-respons, hvis ressourcen ikke findes.
     - NoContent() returnerer en HTTP 204-respons for en vellykket, men tom opdatering.
 
-*/
+*/      [Authorize(2)]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAbsence(int id, AbsenceUpdateDto absenceDto)
         {
@@ -261,7 +262,7 @@ namespace skolesystem.Controllers
     - NotFound() returnerer en HTTP 404-respons, hvis ressourcen ikke findes.
     - NoContent() returnerer en HTTP 204-respons for en vellykket, men tom sletning.
 
-*/
+*/      [Authorize(2)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

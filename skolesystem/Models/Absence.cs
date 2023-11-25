@@ -18,7 +18,7 @@ namespace skolesystem.Models
         public int class_id { get; set; } // ID på klassen, hvor fraværet opstod
 
         [Required]
-        public DateTime absence_date { get; set; } // Dato for fraværet
+        public string absence_date { get; set; } // Dato for fraværet
 
         [Column(TypeName = "nvarchar(255)")] // Bruger nvarchar(255) som databasekolonnetype for at begrænse længden af teksten til 255 tegn.
         public string reason { get; set; } // Valgfrit felt til at angive årsagen til fraværet
