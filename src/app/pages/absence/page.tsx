@@ -275,7 +275,8 @@ export default function FullFeaturedCrudGrid() {
         absence_date: absence, //formattedDate + " time: " + hour + " minuttes " + minutes,
         reason: reason,
       };
-      createAbsence(absenceData)
+
+      createAbsence(absenceData,session?.user.token)
         .then(() => {
           // Handle successful POST
           handleSuccessSnackbarOpen("Absence created successfully!");

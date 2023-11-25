@@ -1,11 +1,12 @@
 // Funktion til at oprette en fraværsregistrering ved at sende en POST-forespørgsel til en API-endepunkt.
-export async function createAbsence(absence: any) {
+export async function createAbsence(absence: any, token: any) {
     try {
       const response = await fetch("https://localhost:7136/api/Absence", {
         method: "POST", // Bruger HTTP-metoden "POST" til at oprette fravær.
         body: JSON.stringify(absence), // Konverterer fraværsdata til JSON-format og sender det som forespørgselens krop.
         headers: {
           "content-type": "application/json", // Angiver forespørgselens "content-type" som JSON.
+          Authorization: 'Bearer ' + token,
         },
       });
       console.log(response); // Logger svaret fra serveren.
