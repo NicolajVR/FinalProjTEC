@@ -333,8 +333,30 @@ namespace skolesystem.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, UserUpdateDto userDto)
         {
-            await _usersService.UpdateUser(id, userDto);
-            return Ok();
+
+            try
+            {
+
+                string salt = BCrypt.Net.BCrypt.GenerateSalt(12);
+                var user = new Users
+                {
+                    surname = userDto.surname,
+                    email = userDto.email,
+                    password_hash = userDto.password_hash,
+                    role_id = userDto.role_id
+
+                };
+                userDto.password_hash = BCrypt.Net.BCrypt.HashPassword(user.password_hash);
+
+                await _usersService.UpdateUser(id, userDto);
+
+                return CreatedAtAction(nameof(GetUserById), new { id = user.user_id }, userDto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request.");
+            }
+
         }
 
 

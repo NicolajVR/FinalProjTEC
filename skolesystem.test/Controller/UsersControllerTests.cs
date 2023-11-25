@@ -1,19 +1,13 @@
 ﻿using FakeItEasy;
-using skolesystem.DTOs;
-using skolesystem.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using skolesystem.Controllers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Moq;
-using Microsoft.AspNetCore.Http;
 using skolesystem.Authorization;
+using skolesystem.Controllers;
 using skolesystem.Data;
+using skolesystem.DTOs;
+using skolesystem.Service;
 
 namespace skolesystem.Tests.Controller
 {
@@ -101,8 +95,8 @@ namespace skolesystem.Tests.Controller
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
 
             okResult.Value.Should().BeOfType<UserReadDto>().Which.user_id.Should().Be(userId);
-            
-         
+
+
         }
 
         [Fact]
@@ -170,7 +164,7 @@ namespace skolesystem.Tests.Controller
         }
 
         [Fact]
-        public async Task Update_ShouldReturnStatusCode200_WhenDataIsSaved()
+        public async Task Update_ShouldReturnStatusCode201_WhenDataIsSaved()
         {
             // Arrange
             int userId = 1;
@@ -184,14 +178,14 @@ namespace skolesystem.Tests.Controller
 
             _usersService
                 .Setup(s => s.UpdateUser(It.IsAny<int>(), It.IsAny<UserUpdateDto>()))
-                .Returns(Task.CompletedTask); // Assuming your UpdateUser method returns Task
+                .Returns(Task.CompletedTask);
 
             // Act
             var result = await _userController.UpdateUser(userId, updateUser);
 
             // Assert
             var statusCodeResult = (IStatusCodeActionResult)result;
-            Assert.Equal(200, statusCodeResult.StatusCode);
+            Assert.Equal(201, statusCodeResult.StatusCode);
         }
 
 
@@ -216,11 +210,14 @@ namespace skolesystem.Tests.Controller
                 .ThrowsAsync(new System.Exception("This is an exception"));
 
             // Act
-            Func<Task> act = async () => await _userController.UpdateUser(userId, updateUser);
+            IActionResult result = await _userController.UpdateUser(userId, updateUser);
 
             // Assert
-            await Assert.ThrowsAsync<System.Exception>(act);
+            Assert.IsType<ObjectResult>(result); // Ensure the result is an ObjectResult
+            ObjectResult objectResult = (ObjectResult)result;
+            Assert.Equal(500, objectResult.StatusCode);
         }
+
 
 
 
