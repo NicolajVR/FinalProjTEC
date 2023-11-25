@@ -148,6 +148,7 @@ export default function FullFeaturedCrudGrid() {
           session?.user.token
         );
 
+        if (classes != undefined){
         const subjects = await getsubjects();
 
         //const classData =  findIdByName(classes, value as string);
@@ -194,10 +195,18 @@ export default function FullFeaturedCrudGrid() {
               assignment_deadline: assignment.assignment_deadline,
             }))
           );
-        } else {
+        }else {
           // Clean rows here
           setRows([]);
         }
+      
+      } else {
+          // Clean rows here
+          setRows([]);
+        }
+
+
+
       }
     };
     fetchData();
@@ -215,6 +224,8 @@ export default function FullFeaturedCrudGrid() {
 
       options = subjects.map((subject: any) => subject.subjectname);
 
+      if(classes != undefined)
+      { 
       const getId = classes[0].enrollmentClassResponse?.id;
 
       console.log("class: ", getId);
@@ -225,6 +236,14 @@ export default function FullFeaturedCrudGrid() {
 
       console.log(classes);
       console.log("look: ", options);
+      }else{
+        setRows([]);
+      }
+
+
+
+
+
     };
 
     if (status === "authenticated") {
@@ -289,7 +308,7 @@ export default function FullFeaturedCrudGrid() {
     const submissionData = {
       userSubmission_text: answer,
       userSubmission_date: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`,
-      userId: session?.user.role_id,
+      userId: session?.user.user_id,
       assignmentId: assignment,
     };
 
