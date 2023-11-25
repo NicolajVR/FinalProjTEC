@@ -107,7 +107,7 @@ export default function FullFeaturedCrudGrid() {
     const fetchData = async () => {
       setIsReady(true);
       const submissions = await getSubmissions(session?.user.token);
-      const submissionData = submissions.filter( (item: any) => item.is_deleted == false);
+      const submissionData = submissions.filter( (item: any) => item.is_deleted == false && item.userSubmissionUserResponse.role_id == 3);
     
       submissionData.forEach(
         (submission: {
