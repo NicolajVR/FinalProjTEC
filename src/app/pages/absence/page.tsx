@@ -292,7 +292,7 @@ export default function FullFeaturedCrudGrid() {
     }
   };
 
-  // Check if the input values are valid
+  // Check if the input values are valid - and show snackbars/alerts.
   const areInputValuesValid = () => {
     //kunne også have brugt en SWITCH
 
