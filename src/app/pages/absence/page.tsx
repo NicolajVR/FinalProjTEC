@@ -292,7 +292,7 @@ export default function FullFeaturedCrudGrid() {
     }
   };
 
-  // Check if the input values are valid - and show snackbars/alerts.
+  // Check if the input values are valid - and show snackbars/alerts
   const areInputValuesValid = () => {
     //kunne også have brugt en SWITCH
 
@@ -478,6 +478,74 @@ export default function FullFeaturedCrudGrid() {
         </div>
 
         <Dialog open={open} onClose={handleClose}>
+  <DialogTitle> {selected} </DialogTitle>
+  <DialogContent
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    }}
+  >
+    <TextField
+      autoFocus
+      margin="dense"
+      id="reasson"
+      label="reason.. "
+      type="text"
+      fullWidth
+      variant="filled"
+      value={reason}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+        setReason(e.target.value)
+      }
+    />
+    <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+      <TextField
+        autoFocus
+        margin="dense"
+        id="hour"
+        label=" Hours... "
+        type="number"
+        variant="filled"
+        style={{ marginRight: "10px" }} // Add this line
+        value={isNaN(hour) ? "" : hour}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setHour(parseInt(e.target.value, 10))
+        }
+      />
+      <TextField
+        autoFocus
+        margin="dense"
+        id="minutes"
+        label=" Minutes..."
+        type="number"
+        variant="filled"
+        value={isNaN(minutes) ? "" : minutes}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setMinutes(parseInt(e.target.value, 10))
+        }
+      />
+    </div>
+    <FormControlLabel
+      control={
+        <Checkbox
+          checked={noAttendanceChecked}
+          onChange={(e) => setNoAttendanceChecked(e.target.checked)}
+        />
+      }
+      label="No Attendance"
+      style={{ alignSelf: "flex-start" }}
+    />
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleClose}>Cancel</Button>
+    <Button onClick={handleSubmit}>Confirm</Button>
+  </DialogActions>
+</Dialog>
+
+
+
+        {/* <Dialog open={open} onClose={handleClose}>
           <DialogTitle> {selected} </DialogTitle>
           <DialogContent
             style={{
@@ -494,13 +562,12 @@ export default function FullFeaturedCrudGrid() {
               type="text"
               fullWidth
               variant="filled"
-              style={{ margin: "10px" }}
+              style={{ }}
               value={reason}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setReason(e.target.value)
               }
             />
-            <Typography> arrived </Typography>
             <TextField
               autoFocus
               margin="dense"
@@ -508,14 +575,13 @@ export default function FullFeaturedCrudGrid() {
               label=" Hours... "
               type="number"
               variant="filled"
-              style={{ margin: "10px" }}
+              style={{ }}
               // olderVersion --> value={hour !== undefined ? hour : ''}
               value={isNaN(hour) ? "" : hour}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setHour(parseInt(e.target.value, 10))
               }
             />
-            <Typography> and </Typography>
             <TextField
               autoFocus
               margin="dense"
@@ -523,14 +589,13 @@ export default function FullFeaturedCrudGrid() {
               label=" Minutes..."
               type="number"
               variant="filled"
-              style={{ margin: "10px" }}
+              style={{ }}
               // olderVersion --> value={minutes !== undefined ? minutes : ''}
               value={isNaN(minutes) ? "" : minutes}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setMinutes(parseInt(e.target.value, 10))
               }
             />
-            <Typography> late </Typography>
             <FormControlLabel
               control={
                 <Checkbox
@@ -539,14 +604,14 @@ export default function FullFeaturedCrudGrid() {
                 />
               }
               label="No Attendance"
-              style={{ margin: "10px" }}
+              style={{ }}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
             <Button onClick={handleSubmit}>Confirm</Button>
           </DialogActions>
-        </Dialog>
+        </Dialog> */}
       </React.Fragment>
 
       <Box

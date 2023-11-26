@@ -58,7 +58,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
 const SideMenu = () => {
 
   let menuRouteList = ["calendar", "submission","profile", ""];
-  let menuListTranslations = ["calendar", "Submission","Profile", "Sign Out"];
+  let menuListTranslations = ["Calendar", "Submission","Profile", "Sign Out"];
   let menuListIcons = [
   <CalendarMonthIcon/>,
     <TaskIcon/>,
@@ -72,7 +72,7 @@ if (session?.user.role_id == 1)
 {
   menuRouteList = ["calendar","data", "profile", "settings", ""];
 
-  menuListTranslations = ["calendar","Data", "Profile", "Settings", "Sign Out"];
+  menuListTranslations = ["Calendar","Data", "Profile", "Settings", "Sign Out"];
   
   menuListIcons = [
 <CalendarMonthIcon/>,
@@ -88,7 +88,7 @@ if (session?.user.role_id == 2)
 {
   menuRouteList = ["calendar","absence","opgave","submited","profile", ""];
 
-  menuListTranslations = ["calendar","Absence","opgave", "Submited", "Profile", "Sign Out"];
+  menuListTranslations = ["Calendar","Absence","Opgave", "Submited", "Profile", "Sign Out"];
   
   menuListIcons = [
 <CalendarMonthIcon/>,

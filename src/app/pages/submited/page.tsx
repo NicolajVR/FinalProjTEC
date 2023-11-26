@@ -1,3 +1,5 @@
+// Lærer opgave
+
 "use client";
 import * as React from "react";
 import getUsers from "@/app/lib/getProfiles";
@@ -348,10 +350,10 @@ export default function FullFeaturedCrudGrid() {
   return (
     <>
       <h1>Submitted assignments </h1>
-      <Button variant="contained" color="error" onClick={handlePendingclick}>
+      <Button variant="contained" color="error" onClick={handlePendingclick} sx={{ borderRadius: 0, boxShadow: 0 }}>
   Pending
 </Button>
-      <Button variant="contained" color="success" onClick={handleVerifiedClick}>
+      <Button variant="contained" color="success" onClick={handleVerifiedClick} sx={{ borderRadius: 0, boxShadow: 0 }}>
   Verified
 </Button>
       <Box
@@ -367,6 +369,7 @@ export default function FullFeaturedCrudGrid() {
         }}
       >
         <DataGrid
+          sx={{ borderRadius: 0 }}
           rows={rows}
           columns={columns}
           editMode="row"
