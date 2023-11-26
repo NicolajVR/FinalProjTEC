@@ -15,6 +15,7 @@ import scss from "./SideMenu.module.scss";
 import TaskIcon from '@mui/icons-material/Task';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
 
 import {
   Divider,
@@ -53,7 +54,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
   },
 });
 
-
+// Student
 const SideMenu = () => {
 
   let menuRouteList = ["calendar", "submission","profile", ""];
@@ -66,6 +67,7 @@ const SideMenu = () => {
   ];
 const { data: session} = useSession();
 
+// Admin
 if (session?.user.role_id == 1)
 {
   menuRouteList = ["calendar","data", "profile", "settings", ""];
@@ -74,14 +76,14 @@ if (session?.user.role_id == 1)
   
   menuListIcons = [
 <CalendarMonthIcon/>,
-  <EqualizerIcon />,
+  <RecentActorsIcon />,
   <Person2Icon />,
   <Settings />,
   <ExitToAppIcon />,
   ];
 } 
 
-
+// Teacher
 if (session?.user.role_id == 2)
 {
   menuRouteList = ["calendar","absence","opgave","submited","profile", ""];

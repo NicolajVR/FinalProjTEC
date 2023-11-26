@@ -1,3 +1,4 @@
+// User Information.
 "use client";
 import * as React from "react";
 import getUsers from "@/app/lib/getProfiles";
@@ -372,7 +373,7 @@ export default function FullFeaturedCrudGrid() {
 
   return (
     <>
-      <h1>Bruger Oplysninger </h1>
+      <h1>Users Information </h1>
 
       <Box
         sx={{

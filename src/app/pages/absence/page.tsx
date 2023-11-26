@@ -304,6 +304,16 @@ export default function FullFeaturedCrudGrid() {
     }
 
     if (
+      noAttendanceChecked &&
+      (hour !== 0 || minutes !== 0 || reason.trim() !== "")
+    ) {
+      handleSnackbarOpen(
+        'Cannot select "No Attendance" if hours or minutes have been changed.'
+      );
+      return false;
+    }
+
+    if (
       !noAttendanceChecked &&
       hour === 0 &&
       minutes === 0 &&

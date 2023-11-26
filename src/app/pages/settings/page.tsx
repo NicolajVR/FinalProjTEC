@@ -1,3 +1,4 @@
+// Users administration
 "use client";
 import * as React from "react";
 import { getUsers, createUser, updateUser, deleteUser } from "@/app/lib/user";
@@ -197,6 +198,10 @@ export default function FullFeaturedCrudGrid() {
 
         console.log(profileData);
         await createProfile(profileData);
+        //add snackbar her.
+        handleSuccessSnackbarOpen(
+          "User created successfully!"
+        );
 
         row.isNew = false;
       }
@@ -290,6 +295,9 @@ export default function FullFeaturedCrudGrid() {
     console.log(rowToDelete?.is_deleted);
 
     deleteUser(rowId);
+    handleSuccessSnackbarOpen(
+      "User deleted successfully!"
+      );
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -372,10 +380,9 @@ export default function FullFeaturedCrudGrid() {
           "Updated: " + updatedRow.surname + " succesfuly"
         );
         return updatedRow;
-      } else {
-        handleSnackbarOpen("Unexpected error check server");
-        return originalRow;
       }
+        setRows(updatedRows);
+        return originalRow;
     }
   };
 
@@ -385,7 +392,7 @@ export default function FullFeaturedCrudGrid() {
 
   const handleAddToClass = () => {
     console.log("after pressed button:", selectedID);
-
+    
     if (
       selectedID.length == 0 ||
       selectedID[0]?.surname == "User not selected"
@@ -493,6 +500,7 @@ export default function FullFeaturedCrudGrid() {
       //await createEnrollment(enrollmentData);
 
       setOpen(false);
+      handleSuccessSnackbarOpen("User added succesfully!");
       //setNoChecked(false);
     }
   };
