@@ -9853,33 +9853,40 @@
     ]
   },
   "packageFolders": {
-    "/Users/ramazandtas12gmail.com/.nuget/packages/": {}
+    "C:\\Users\\Frede\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem.test/skolesystem.test.csproj",
+      "projectUniqueName": "C:\\Users\\Frede\\source\\repos\\Svendeprøve\\skolesystem.test\\skolesystem.test.csproj",
       "projectName": "skolesystem.test",
-      "projectPath": "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem.test/skolesystem.test.csproj",
-      "packagesPath": "/Users/ramazandtas12gmail.com/.nuget/packages/",
-      "outputPath": "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem.test/obj/",
+      "projectPath": "C:\\Users\\Frede\\source\\repos\\Svendeprøve\\skolesystem.test\\skolesystem.test.csproj",
+      "packagesPath": "C:\\Users\\Frede\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Frede\\source\\repos\\Svendeprøve\\skolesystem.test\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/Users/ramazandtas12gmail.com/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\Frede\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "/usr/local/share/dotnet/library-packs": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem/skolesystem.csproj": {
-              "projectPath": "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem/skolesystem.csproj"
+            "C:\\Users\\Frede\\source\\repos\\Svendeprøve\\skolesystem\\skolesystem.csproj": {
+              "projectPath": "C:\\Users\\Frede\\source\\repos\\Svendeprøve\\skolesystem\\skolesystem.csproj"
             }
           }
         }
@@ -9943,7 +9950,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.403/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   },
