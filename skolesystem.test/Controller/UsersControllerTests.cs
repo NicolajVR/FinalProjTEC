@@ -184,7 +184,7 @@ namespace skolesystem.Tests.Controller
 
             _usersService
                 .Setup(s => s.UpdateUser(It.IsAny<int>(), It.IsAny<UserUpdateDto>()))
-                .Returns(Task.CompletedTask); // Assuming your UpdateUser method returns Task
+                .Returns(Task.CompletedTask);
 
             // Act
             var result = await _userController.UpdateUser(userId, updateUser);
@@ -202,6 +202,7 @@ namespace skolesystem.Tests.Controller
         [Fact]
         public async Task Update_ShouldReturnStatusCode500_WhenExceptionIsRaised()
         {
+
             // Arrange
             int userId = 1;
             UserUpdateDto updateUser = new UserUpdateDto

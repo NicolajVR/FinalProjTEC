@@ -214,8 +214,12 @@ namespace skolesystem.Service
 */
         public async Task AddUser(UserCreateDto user)
         {
+            string salt = BCrypt.Net.BCrypt.GenerateSalt(12);
+            user.password_hash = BCrypt.Net.BCrypt.HashPassword(user.password_hash, salt);
+
             var userEntity = _mapper.Map<Users>(user);
             await _usersRepository.AddUser(userEntity);
+
         }
 
 
@@ -249,6 +253,7 @@ namespace skolesystem.Service
                 return;
             }
 
+            userDto.password_hash = BCrypt.Net.BCrypt.HashPassword(userDto.password_hash);
             _mapper.Map(userDto, existingUser);
 
             await _usersRepository.UpdateUser(existingUser);

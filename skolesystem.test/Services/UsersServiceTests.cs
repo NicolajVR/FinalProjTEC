@@ -153,7 +153,8 @@ namespace skolesystem.Tests.Services
             {
                 surname = "Doe",
                 email = "john.doe@example.com",
-                
+                password_hash = "passwordHash",
+
             };
 
             var expectedUser = new Users
@@ -161,7 +162,8 @@ namespace skolesystem.Tests.Services
                 user_id = 1,
                 surname = "Doe",
                 email = "john.doe@example.com",
-                
+                password_hash = "passwordHash",
+
             };
 
             _mapperMock.Setup(mapper => mapper.Map<Users>(userCreateDto)).Returns(expectedUser);
