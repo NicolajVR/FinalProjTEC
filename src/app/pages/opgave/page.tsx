@@ -222,7 +222,7 @@ export default function FullFeaturedCrudGrid() {
       );
       const subjects = await getsubjects();
       //console.log("token: ", session?.user.token);
-
+      if(classes && subjects){
       options = classes.map(
         (item: { enrollmentClassResponse: { className: any } }) =>
           item.enrollmentClassResponse.className
@@ -238,11 +238,17 @@ export default function FullFeaturedCrudGrid() {
 
       console.log(classes);
       console.log("look:", options);
+      }
     };
 
     if (status === "authenticated") {
-      setIsReady(true);
-      fetchData();
+      if (session.user.role_id === 2)
+      {
+        setIsReady(true);
+        fetchData();
+      }else{
+        redirect("/pages/calendar");
+      }
     } else if (status === "unauthenticated") {
       redirect("/auth/signin");
     }

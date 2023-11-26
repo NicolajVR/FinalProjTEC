@@ -105,10 +105,9 @@ export default function FullFeaturedCrudGrid() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsReady(true);
       const submissions = await getSubmissions(session?.user.token);
       const submissionData = submissions.filter( (item: any) => item.is_deleted == false && item.userSubmissionUserResponse.role_id == 3);
-    
+      if (submissions && submissionData){
       submissionData.forEach(
         (submission: {
           userSubmission_Id: any;
@@ -129,11 +128,17 @@ export default function FullFeaturedCrudGrid() {
           );
         }
       );
+      }
     };
 
     if (status === "authenticated") {
-      setIsReady(true);
-      fetchData();
+      if (session.user.role_id === 2)
+      {
+        setIsReady(true);
+        fetchData();
+      }else{
+        redirect("/pages/calendar");
+      }
     } else if (status === "unauthenticated") {
       redirect("/auth/signin");
     }
@@ -159,7 +164,7 @@ export default function FullFeaturedCrudGrid() {
 
     if(isOnVerified == true ){
     const submissions = await getSubmissions(session?.user.token);
-    const submissionData = submissions.filter( (item: any) => item.is_deleted == false);
+    const submissionData = submissions.filter( (item: any) => item.is_deleted == false && item.userSubmissionUserResponse.role_id == 3);
 
     console.log("here boi: ",submissionData);
 

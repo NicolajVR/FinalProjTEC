@@ -189,7 +189,7 @@ export default function FullFeaturedCrudGrid() {
         session?.user.user_id as number,
         session?.user.token
       );
-
+      if(classes){
       options = classes.map(
         (item: { enrollmentClassResponse: { className: any } }) =>
           item.enrollmentClassResponse.className
@@ -197,15 +197,18 @@ export default function FullFeaturedCrudGrid() {
 
       setValue(options[0]);
       setInputValue(options[0]);
-
-      console.log("her er Classes: ", classes);
-      console.log("look:", options);
+      }
     };
 
     // hvis session er authenticated so vis data hvis ikke så redirect til /auth/signin
     if (status === "authenticated") {
-      setIsReady(true);
-      fetchData();
+      if (session.user.role_id === 2)
+      {
+        setIsReady(true);
+        fetchData();
+      }else{
+        redirect("/pages/calendar");
+      }
     } else if (status === "unauthenticated") {
       redirect("/auth/signin");
     }

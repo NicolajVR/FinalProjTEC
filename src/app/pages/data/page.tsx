@@ -96,9 +96,11 @@ export default function FullFeaturedCrudGrid() {
     //hente brugerprofiler ved indlæsning af komponenten
   useEffect(() => {
     const fetchData = async () => {
+
       setIsReady(true);
       const users = await getProfiles();
       console.log(users);
+      if (users){
       users.forEach(
         (user: {
           user_information_id: any;
@@ -126,11 +128,17 @@ export default function FullFeaturedCrudGrid() {
           );
         }
       );
+      }
     };
 
     if (status === "authenticated") {
-      setIsReady(true);
-      fetchData();
+      if (session.user.role_id === 1)
+      {
+        setIsReady(true);
+        fetchData();
+      }else{
+        redirect("/pages/calendar");
+      }
     } else if (status === "unauthenticated") {
       redirect("/auth/signin"); // Omdirigerer til login, hvis ikke autentificeret
     }

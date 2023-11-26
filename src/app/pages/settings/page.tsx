@@ -30,7 +30,9 @@ import {
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import {
+  Alert,
   Autocomplete,
   Chip,
   Dialog,
@@ -40,12 +42,17 @@ import {
   DialogTitle,
   Hidden,
   Link,
+  Snackbar,
   TextField,
 } from "@mui/material";
 import { create } from "domain";
 import createProfile from "@/app/lib/createProfile";
 import getUProfiles from "@/app/lib/getProfiles";
-import { createEnrollment, deleteEnrollment, getClassesFromUser } from "@/app/lib/enrollment";
+import {
+  createEnrollment,
+  deleteEnrollment,
+  getClassesFromUser,
+} from "@/app/lib/enrollment";
 import { getClass } from "@/app/lib/class";
 
 const initialRows: GridRowsProp = [
@@ -114,6 +121,24 @@ export default function FullFeaturedCrudGrid() {
   const [open, setOpen] = React.useState(false);
   const [openRemove, setOpenRemove] = React.useState(false);
   const [inputValue, setInputValue] = React.useState("");
+  const [snackbarOpen, setSnackbarOpen] = React.useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState<string>("");
+  const [successSnackbarOpen, setSuccessSnackbarOpen] =
+    React.useState<boolean>(false);
+  const [successSnackbarMessage, setSuccessSnackbarMessage] =
+    React.useState<string>("");
+
+  // åbne error dialog box
+  const handleSnackbarOpen = (message: string) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
+
+  // åbne success dialog box
+  const handleSuccessSnackbarOpen = (message: string) => {
+    setSuccessSnackbarMessage(message);
+    setSuccessSnackbarOpen(true);
+  };
 
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
@@ -190,32 +215,38 @@ export default function FullFeaturedCrudGrid() {
 
       const users = await getUsers(session?.user.token);
       //console.log("token: ", session?.user.token);
-      users.forEach(
-        (user: {
-          user_id: any;
-          surname: any;
-          email: any;
-          is_deleted: any;
-          role: any;
-        }) => {
-          setRows(
-            users.map((user: any) => ({
-              id: user.user_id,
-              surname: user.surname,
-              email: user.email,
-              password_hash: "",
-              is_deleted: user.is_deleted,
-              role: user.role_id,
-            }))
-          );
-        }
-      );
+      if (users) {
+        users.forEach(
+          (user: {
+            user_id: any;
+            surname: any;
+            email: any;
+            is_deleted: any;
+            role: any;
+          }) => {
+            setRows(
+              users.map((user: any) => ({
+                id: user.user_id,
+                surname: user.surname,
+                email: user.email,
+                password_hash: "",
+                is_deleted: user.is_deleted,
+                role: user.role_id,
+              }))
+            );
+          }
+        );
+      }
     };
 
     if (status === "authenticated") {
-      setIsReady(true);
-      console.log(rows[0]);
-      fetchData();
+      if (session?.user.role_id == 1) {
+        setIsReady(true);
+        console.log(session?.user.role_id);
+        fetchData();
+      } else {
+        redirect("/pages/calendar");
+      }
     } else if (status === "unauthenticated") {
       redirect("/auth/signin");
     }
@@ -298,28 +329,54 @@ export default function FullFeaturedCrudGrid() {
         break;
     }
 
-    // Update the state with the new rows
-    const userData = {
-      user_id: updatedRow.id,
-      surname: updatedRow.surname,
-      email: updatedRow.email,
-      password_hash: updatedRow.password_hash,
-      is_deleted: updatedRow.is_deleted,
-      role_id: result,
-    };
+    // Check for a number in the password
+    const hasNumber = /\d/.test(updatedRow.password_hash);
 
-    // if id exists in database
-    if (Number.isInteger(updatedRow.id)) {
-      updateUser(userData, updatedRow.id);
-      console.log(userData);
+    // Check for a special character in the password (non-alphanumeric)
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(
+      updatedRow.password_hash
+    );
+
+    if (updatedRow.surname.length < 4) {
+      handleSnackbarOpen("Please surname must be 3 character longer");
+
+      return originalRow;
     }
+    if (updatedRow.email.length < 4) {
+      handleSnackbarOpen("Please Email must be 3 character longer");
+      return originalRow;
+    }
+    if (updatedRow.password_hash.length < 7 || !hasNumber || !hasSpecialChar) {
+      handleSnackbarOpen(
+        "Invalid password must have one number, special char and longer than 7 characters "
+      );
+      return originalRow;
+    } else {
+      // Update the state with the new rows
+      const userData = {
+        user_id: updatedRow.id,
+        surname: updatedRow.surname,
+        email: updatedRow.email,
+        password_hash: updatedRow.password_hash,
+        is_deleted: updatedRow.is_deleted,
+        role_id: result,
+      };
 
-    //createUser(userData);
+      // if id exists in database
+      if (Number.isInteger(updatedRow.id)) {
+        updateUser(userData, updatedRow.id);
 
-    setRows(updatedRows);
-
-    // Return the updated row to update the internal state of the DataGrid
-    return updatedRow;
+        // Return the updated row to update the internal state of the DataGrid
+        setRows(updatedRows);
+        handleSuccessSnackbarOpen(
+          "Updated: " + updatedRow.surname + " succesfuly"
+        );
+        return updatedRow;
+      } else {
+        handleSnackbarOpen("Unexpected error check server");
+        return originalRow;
+      }
+    }
   };
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
@@ -328,14 +385,27 @@ export default function FullFeaturedCrudGrid() {
 
   const handleAddToClass = () => {
     console.log("after pressed button:", selectedID);
-    setOpen(true);
+
+    if (
+      selectedID.length == 0 ||
+      selectedID[0]?.surname == "User not selected"
+    ) {
+      handleSnackbarOpen("Please select a user ");
+    } else {
+      setOpen(true);
+    }
     //await createEnrollment()
   };
 
   const handleRemove = () => {
-    setOpenRemove(true);
-
-
+    if (
+      selectedID.length == 0 ||
+      selectedID[0]?.surname == "User not selected"
+    ) {
+      handleSnackbarOpen("Please select a user ");
+    } else {
+      setOpenRemove(true);
+    }
   };
 
   const handleCancel = () => {
@@ -344,7 +414,6 @@ export default function FullFeaturedCrudGrid() {
   };
 
   const handleRemoveConfirm = async () => {
-
     const findIdByName = (
       classesArray: any[],
       classNameToFind: string
@@ -363,30 +432,28 @@ export default function FullFeaturedCrudGrid() {
       //console.log("Enrollment submitted:", classData, userIds);
       let number = 0;
 
-
       const enrollmentPromises = userIds.map(async (userId: number) => {
+        const enrollments = await getClassesFromUser(
+          Number(userId),
+          session?.user.token
+        );
 
+        if (enrollments) {
+          const enrollmentIds = enrollments.map(
+            (enrollment: any) => enrollment.enrollment_Id
+          );
 
-        const enrollments = await getClassesFromUser(Number(userId), session?.user.token);
+          enrollmentIds.forEach(async (enrollmentId: any) => {
+            // Perform actions for each enrollmentId
+            console.log("Enrollment ID:", enrollmentId);
+            await deleteEnrollment(enrollmentId, session?.user.token);
+          });
 
-        if (enrollments)
-        {
-        const enrollmentIds = enrollments.map((enrollment: any) => enrollment.enrollment_Id);
-
-        enrollmentIds.forEach(async (enrollmentId: any) => {
-          // Perform actions for each enrollmentId
-          console.log("Enrollment ID:", enrollmentId);
-          await deleteEnrollment(enrollmentId, session?.user.token);
-        });
-
-
-
-        console.log("response send to database: ", enrollmentIds);
-      }
+          console.log("response send to database: ", enrollmentIds);
+        }
       });
-  
-      await Promise.all(enrollmentPromises);
 
+      await Promise.all(enrollmentPromises);
     }
     setOpenRemove(false);
   };
@@ -412,16 +479,15 @@ export default function FullFeaturedCrudGrid() {
       let number = 0;
 
       const enrollmentPromises = userIds.map(async (userId: number) => {
-        
         const enrollmentData = {
           enrollmentId: 600,
           userId: Number(userId),
           ClasseId: classData,
         };
-        console.log("response send to database: ",++number, enrollmentData);
+        console.log("response send to database: ", ++number, enrollmentData);
         await createEnrollment(enrollmentData);
       });
-  
+
       await Promise.all(enrollmentPromises);
 
       //await createEnrollment(enrollmentData);
@@ -457,7 +523,7 @@ export default function FullFeaturedCrudGrid() {
     {
       field: "password_hash",
       renderCell: (params) => (
-        <span>{'*'.repeat(params.value.toString().length)}</span>
+        <span>{"*".repeat(params.value.toString().length)}</span>
       ),
       headerName: "Password",
       width: 180,
@@ -559,7 +625,6 @@ export default function FullFeaturedCrudGrid() {
         Add to Class
       </Button>
 
-    
       <Button
         sx={{
           borderRadius: 0,
@@ -570,7 +635,7 @@ export default function FullFeaturedCrudGrid() {
       >
         Remove from Class
       </Button>
-      
+
       <Box
         sx={{
           height: 500,
@@ -706,6 +771,34 @@ export default function FullFeaturedCrudGrid() {
             toolbar: { setRows, setRowModesModel },
           }}
         />
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000} // Adjust as needed
+          onClose={() => setSnackbarOpen(false)}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={() => setSnackbarOpen(false)}
+            severity="error"
+          >
+            {snackbarMessage}
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar
+          open={successSnackbarOpen}
+          autoHideDuration={6000} // Adjust as needed
+          onClose={() => setSuccessSnackbarOpen(false)}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={() => setSuccessSnackbarOpen(false)}
+            severity="success" // Set severity to success
+          >
+            {successSnackbarMessage}
+          </MuiAlert>
+        </Snackbar>
       </Box>
     </>
   );
