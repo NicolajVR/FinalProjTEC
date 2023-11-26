@@ -1,32 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Frede\\source\\repos\\Svendeprøve\\skolesystem\\skolesystem.csproj": {}
+    "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem/skolesystem.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Frede\\source\\repos\\Svendeprøve\\skolesystem\\skolesystem.csproj": {
+    "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem/skolesystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Frede\\source\\repos\\Svendeprøve\\skolesystem\\skolesystem.csproj",
+        "projectUniqueName": "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem/skolesystem.csproj",
         "projectName": "skolesystem",
-        "projectPath": "C:\\Users\\Frede\\source\\repos\\Svendeprøve\\skolesystem\\skolesystem.csproj",
-        "packagesPath": "C:\\Users\\Frede\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Frede\\source\\repos\\Svendeprøve\\skolesystem\\obj\\",
+        "projectPath": "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem/skolesystem.csproj",
+        "packagesPath": "/Users/ramazandtas12gmail.com/.nuget/packages/",
+        "outputPath": "/Users/ramazandtas12gmail.com/Desktop/admin-panel-web-api/skolesystem/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Frede\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/ramazandtas12gmail.com/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -86,6 +80,10 @@
               "version": "[7.0.13, )"
             },
             "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.EntityFrameworkCore.Analyzers": {
               "target": "Package",
               "version": "[7.0.13, )"
             },
@@ -151,7 +149,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.403/RuntimeIdentifierGraph.json"
         }
       }
     }

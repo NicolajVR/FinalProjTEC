@@ -23,6 +23,7 @@
     <PackageReference Include="BCrypt" Version="1.0.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="CoreEx.AutoMapper" Version="3.5.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="7.0.13" />
   </ItemGroup>
 
   <ItemGroup>
