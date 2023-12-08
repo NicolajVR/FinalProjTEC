@@ -88,7 +88,7 @@ if (session?.user.role_id == 2)
 {
   menuRouteList = ["calendar","absence","opgave","submited","profile", ""];
 
-  menuListTranslations = ["Calendar","Absence","Opgave", "Submited", "Profile", "Sign Out"];
+  menuListTranslations = ["Calendar","Absence","Add Assignment", "Check Submited", "Profile", "Sign Out"];
   
   menuListIcons = [
 <CalendarMonthIcon/>,

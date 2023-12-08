@@ -5,6 +5,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 export const authOptions: NextAuthOptions = {
 
   // Angiv en 'credentials'-provider til at håndtere brugerlogin ved brug af brugernavn og adgangskode
+  // Custom provider
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -18,7 +19,7 @@ export const authOptions: NextAuthOptions = {
         try {
           // Send en POST-anmodning til den angivne URL med de indtastede legitimationsoplysninger
           const res = await fetch('https://localhost:7136/api/User/authenticate', {
-            method: 'POST',
+            method: 'POST', //mere sikkert
             body: JSON.stringify(credentials),
             headers: { 'Content-Type': 'application/json' },
           });

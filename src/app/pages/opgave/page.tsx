@@ -398,7 +398,7 @@ export default function FullFeaturedCrudGrid() {
 
   return (
     <>
-      <h1>Opgave</h1>
+      <h1>Assignments</h1>
 
       <div>
         <div className={scss.inputsheader}>

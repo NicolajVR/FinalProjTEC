@@ -10,8 +10,6 @@ Derudover er der brugt dialoger til at indtaste fraværsoplysninger og knapper t
 
 */
 
-
-
 "use client";
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -84,7 +82,7 @@ interface EditToolbarProps {
 }
 
 function EditToolbar(props: EditToolbarProps) {
-    // Returnerer en værktøjscontainer til brug i grid'en
+  // Returnerer en værktøjscontainer til brug i grid'en
   const { setRows, setRowModesModel } = props;
   return <GridToolbarContainer></GridToolbarContainer>;
 }
@@ -111,7 +109,7 @@ export default function FullFeaturedCrudGrid() {
   const [successSnackbarMessage, setSuccessSnackbarMessage] =
     React.useState<string>("");
 
-  // åbne error dialog box 
+  // åbne error dialog box
   const handleSnackbarOpen = (message: string) => {
     setSnackbarMessage(message);
     setSnackbarOpen(true);
@@ -123,15 +121,15 @@ export default function FullFeaturedCrudGrid() {
     setSuccessSnackbarOpen(true);
   };
 
-  //Tjek Attendence 
+  //Tjek Attendence
   const [noAttendanceChecked, setNoAttendanceChecked] = React.useState(false);
 
   const { data: session, status } = useSession();
 
-  // 
+  //
   const [isReady, setIsReady] = useState(false);
 
-   // En række useEffect-hooks anvendes til at håndtere datahentning og opdatering
+  // En række useEffect-hooks anvendes til at håndtere datahentning og opdatering
   useEffect(() => {
     const findIdByName = (
       classesArray: any[],
@@ -145,6 +143,7 @@ export default function FullFeaturedCrudGrid() {
 
     console.log("Autocomplete value changed:", value);
 
+    //få klasser læren har
     const fetchData = async () => {
       //(logik til at hente og opdatere data)
       if (value != null) {
@@ -153,6 +152,7 @@ export default function FullFeaturedCrudGrid() {
           session?.user.token
         );
 
+        // få users fra de klaser
         const classData = findIdByName(classes, value as string);
         const userGetData = await getUsersFromClass(
           classData as number,
@@ -162,10 +162,9 @@ export default function FullFeaturedCrudGrid() {
           (item: any) =>
             item.enrollmentUserResponse.user_id !== session?.user.user_id
         );
-        console.log("here we romoved teacher: ", classMembers);
-
         console.log("here is userGetData: ", userGetData);
 
+        // indsæt i rows
         if (classMembers.length > 0) {
           setRows(
             classMembers.map((user: any) => ({
@@ -181,32 +180,32 @@ export default function FullFeaturedCrudGrid() {
       }
     };
     fetchData();
-  }, [value] ); // Udføres når værdien af 'value' ændres
+  }, [value]); // Udføres når værdien af 'value' ændres
 
+  // hvis ny klasse tilføjes - opdatere useEffect.
   useEffect(() => {
     const fetchData = async () => {
       const classes = await getClassesFromUser(
         session?.user.user_id as number,
         session?.user.token
       );
-      if(classes){
-      options = classes.map(
-        (item: { enrollmentClassResponse: { className: any } }) =>
-          item.enrollmentClassResponse.className
-      );
+      if (classes) {
+        options = classes.map(
+          (item: { enrollmentClassResponse: { className: any } }) =>
+            item.enrollmentClassResponse.className
+        );
 
-      setValue(options[0]);
-      setInputValue(options[0]);
+        setValue(options[0]);
+        setInputValue(options[0]);
       }
     };
 
     // hvis session er authenticated so vis data hvis ikke så redirect til /auth/signin
     if (status === "authenticated") {
-      if (session.user.role_id === 2)
-      {
+      if (session.user.role_id === 2) {
         setIsReady(true);
         fetchData();
-      }else{
+      } else {
         redirect("/pages/calendar");
       }
     } else if (status === "unauthenticated") {
@@ -221,7 +220,6 @@ export default function FullFeaturedCrudGrid() {
     return null;
   }
 
-  //absence confirm - lav "Success" efter POST (hvis OK), - Uncheck Checkbox. - lav man kun kan vælge en.
   const handleSubmit = async () => {
     if (!areInputValuesValid()) {
       return;
@@ -259,18 +257,19 @@ export default function FullFeaturedCrudGrid() {
       }-${day < 10 ? "0" + day : day}`;
 
       // Output the formatted date
-      console.log(formattedDate);
+      //console.log(formattedDate);
 
-      console.log("Reason submitted:", reason);
-      console.log("Hours submitted:", hour);
-      console.log("Minutes submitted:", minutes);
+      //console.log("Reason submitted:", reason);
+      //console.log("Hours submitted:", hour);
+      //console.log("Minutes submitted:", minutes);
 
       let absence = formattedDate + " hours: " + hour + " minuttes " + minutes;
       // Log a message if the "No Attendance" checkbox is checked
       if (noAttendanceChecked == true) {
-        absence = formattedDate + " hours: " + 8;
+        absence = formattedDate + " hours: " + 8 + " minuttes: " + 0;
       }
 
+      // vores absence data gemmes i denne variabel/Objekt - som sendes videre til vores createAbsence sammen med token.
       const absenceData = {
         user_id: selectedID,
         teacher_id: session?.user.user_id,
@@ -279,7 +278,7 @@ export default function FullFeaturedCrudGrid() {
         reason: reason,
       };
 
-      createAbsence(absenceData,session?.user.token)
+      createAbsence(absenceData, session?.user.token)
         .then(() => {
           // Handle successful POST
           handleSuccessSnackbarOpen("Absence created successfully!");
@@ -287,7 +286,7 @@ export default function FullFeaturedCrudGrid() {
           setNoAttendanceChecked(false);
         })
         .catch((error) => {
-          // Handle errors if needed
+          console.log(error)
         });
     }
   };
@@ -303,10 +302,16 @@ export default function FullFeaturedCrudGrid() {
       return false;
     }
 
-    if (
-      noAttendanceChecked &&
-      (hour !== 0 || minutes !== 0 || reason.trim() !== "")
-    ) {
+    // if (
+    //   noAttendanceChecked &&
+    //   (hour !== 0 || minutes !== 0 || reason.trim() !== "")
+    // ) {
+    //   handleSnackbarOpen(
+    //     'Cannot select "No Attendance" if hours or minutes have been changed.'
+    //   );
+    //   return false;
+    // }
+    if (noAttendanceChecked && (hour !== 0 || minutes !== 0)) {
       handleSnackbarOpen(
         'Cannot select "No Attendance" if hours or minutes have been changed.'
       );
@@ -330,7 +335,7 @@ export default function FullFeaturedCrudGrid() {
       return true;
     }
 
-    if (noAttendanceChecked && (hour !== 0 || minutes !== 0)) {
+    if (noAttendanceChecked && hour !== 0 || minutes !== 0) {
       handleSnackbarOpen(
         'Cannot select "No Attendance" if hours or minutes have been changed.'
       );
@@ -370,8 +375,8 @@ export default function FullFeaturedCrudGrid() {
     console.log("her er hour :", hour);
     return true;
   };
-
-   // Funktioner til at åbne og lukke dialogvinduet for fravær
+  
+  // Funktioner til at åbne og lukke dialogvinduet for fravær
   const handleClickOpen = () => {
     setOpen(true);
     setHour(0); // Reset hour to 0 when opening the dialog
@@ -393,7 +398,6 @@ export default function FullFeaturedCrudGrid() {
     }
   };
 
-
   const handleCancelClick = (id: GridRowId) => () => {
     setRowModesModel({
       ...rowModesModel,
@@ -406,12 +410,12 @@ export default function FullFeaturedCrudGrid() {
     }
   };
 
-   // Event handler til at håndtere valg af rækker i grid'en
+  // Event handler til at håndtere valg af rækker i grid'en
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);
   };
 
-   // Definition af kolonner i grid'en
+  // Definition af kolonner i grid'en
   const columns: GridColDef[] = [
     { field: "name", headerName: "Name", width: 120, editable: true },
     {
@@ -478,78 +482,10 @@ export default function FullFeaturedCrudGrid() {
         </div>
 
         <Dialog open={open} onClose={handleClose}>
-  <DialogTitle> {selected} </DialogTitle>
-  <DialogContent
-    style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-    }}
-  >
-    <TextField
-      autoFocus
-      margin="dense"
-      id="reasson"
-      label="reason.. "
-      type="text"
-      fullWidth
-      variant="filled"
-      value={reason}
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-        setReason(e.target.value)
-      }
-    />
-    <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-      <TextField
-        autoFocus
-        margin="dense"
-        id="hour"
-        label=" Hours... "
-        type="number"
-        variant="filled"
-        style={{ marginRight: "10px" }} // Add this line
-        value={isNaN(hour) ? "" : hour}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setHour(parseInt(e.target.value, 10))
-        }
-      />
-      <TextField
-        autoFocus
-        margin="dense"
-        id="minutes"
-        label=" Minutes..."
-        type="number"
-        variant="filled"
-        value={isNaN(minutes) ? "" : minutes}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setMinutes(parseInt(e.target.value, 10))
-        }
-      />
-    </div>
-    <FormControlLabel
-      control={
-        <Checkbox
-          checked={noAttendanceChecked}
-          onChange={(e) => setNoAttendanceChecked(e.target.checked)}
-        />
-      }
-      label="No Attendance"
-      style={{ alignSelf: "flex-start" }}
-    />
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={handleClose}>Cancel</Button>
-    <Button onClick={handleSubmit}>Confirm</Button>
-  </DialogActions>
-</Dialog>
-
-
-
-        {/* <Dialog open={open} onClose={handleClose}>
           <DialogTitle> {selected} </DialogTitle>
           <DialogContent
             style={{
-              display: "flexbox",
+              display: "flex",
               flexDirection: "column",
               alignItems: "center",
             }}
@@ -562,40 +498,44 @@ export default function FullFeaturedCrudGrid() {
               type="text"
               fullWidth
               variant="filled"
-              style={{ }}
               value={reason}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setReason(e.target.value)
               }
             />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="hour"
-              label=" Hours... "
-              type="number"
-              variant="filled"
-              style={{ }}
-              // olderVersion --> value={hour !== undefined ? hour : ''}
-              value={isNaN(hour) ? "" : hour}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setHour(parseInt(e.target.value, 10))
-              }
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="minutes"
-              label=" Minutes..."
-              type="number"
-              variant="filled"
-              style={{ }}
-              // olderVersion --> value={minutes !== undefined ? minutes : ''}
-              value={isNaN(minutes) ? "" : minutes}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setMinutes(parseInt(e.target.value, 10))
-              }
-            />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <TextField
+                autoFocus
+                margin="dense"
+                id="hour"
+                label=" Hours... "
+                type="number"
+                variant="filled"
+                style={{ marginRight: "10px" }} // Add this line
+                value={isNaN(hour) ? "" : hour}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setHour(parseInt(e.target.value, 10))
+                }
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="minutes"
+                label=" Minutes..."
+                type="number"
+                variant="filled"
+                value={isNaN(minutes) ? "" : minutes}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setMinutes(parseInt(e.target.value, 10))
+                }
+              />
+            </div>
             <FormControlLabel
               control={
                 <Checkbox
@@ -604,14 +544,14 @@ export default function FullFeaturedCrudGrid() {
                 />
               }
               label="No Attendance"
-              style={{ }}
+              style={{ alignSelf: "flex-start" }}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
             <Button onClick={handleSubmit}>Confirm</Button>
           </DialogActions>
-        </Dialog> */}
+        </Dialog>
       </React.Fragment>
 
       <Box
